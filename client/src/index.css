@@ -26,7 +26,7 @@ code {
   width: 75%;
   position: absolute;
   bottom: 10px;
-  left: 25%;
+  left: 20%;
 }
 
 .users {
@@ -40,4 +40,12 @@ code {
 .sender {
   font-weight: bold;
   font-family:  "Book Antiqua";
+}
+
+.paper {
+  margin: 20px;
+}
+
+.textArea {
+  border: 10px;
 }
