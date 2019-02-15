@@ -1,0 +1,11 @@
+{
+  "name": "slack_stripped",
+  "version": "1.0.0",
+  "description": "A stripped down version of Slack",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Chukwualuka Chiama",
+  "license": "ISC"
+}
