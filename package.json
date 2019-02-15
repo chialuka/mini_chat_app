@@ -4,8 +4,14 @@
   "description": "A stripped down version of Slack",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start:server": "cd server && nodemon index.js",
+    "start:client": "cd client && npm run start",
+    "start:dev": "concurrently \"npm run start:server\" \"npm run start:client\""
   },
   "author": "Chukwualuka Chiama",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "concurrently": "^4.1.0"
+  }
 }
