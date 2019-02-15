@@ -12,3 +12,32 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
+
+.chatPage {
+  display: flex;
+  flex-flow: row nowrap;
+}
+
+.selectUser {
+  width: 25%;
+}
+
+.personalChat {
+  width: 75%;
+  position: absolute;
+  bottom: 10px;
+  left: 25%;
+}
+
+.users {
+  cursor: pointer;
+}
+
+.message {
+  margin: 10px;
+}
+
+.sender {
+  font-weight: bold;
+  font-family:  "Book Antiqua";
+}

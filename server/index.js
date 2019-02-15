@@ -10,8 +10,8 @@ const User = mongoose.model("User", {
 
 const Message = mongoose.model("Message", {
   message: String,
-  firstUserId: String,
-  secondUserId: String
+  senderMail: String,
+  receiverMail: String,
 })
 
 const typeDefs = `
@@ -30,8 +30,8 @@ const typeDefs = `
   type Message {
     id: ID!
     message: String!
-    firstUserId: String!
-    secondUserId: String!
+    senderMail: String!
+    receiverMail: String!
     users: [User]
   }
 
@@ -40,7 +40,7 @@ const typeDefs = `
     updateUser(id: ID! name: String!): User!
     deleteUser(id: ID!): Boolean!
 
-    createMessage(firstUserId: String! secondUserId: String! message: String!): Message!
+    createMessage(senderMail: String! receiverMail: String! message: String!): Message!
     updateMessage(id: ID! message: String!): Message!
     deleteMessage(id: ID!): Boolean!
   }
@@ -53,14 +53,14 @@ const resolvers = {
   },
 
   User: {
-    messages: async ({ id }) => {
-      return (await Message.find({firstUserId: id}))
+    messages: async ({ email }) => {
+      return (await Message.find({ senderMail: email }))
     }
   },
 
   Message: {
-    users: async ({ firstUserId }) => {
-      return (await User.find({ _id: firstUserId}))
+    users: async ({ senderMail }) => {
+      return (await User.find({ email: senderMail }))
     }
   },
 
@@ -82,8 +82,8 @@ const resolvers = {
       return true;
     },
 
-    createMessage: async (_, {firstUserId, secondUserId, message}) => {
-      const userText = new Message({ firstUserId, secondUserId, message });
+    createMessage: async (_, {senderMail, receiverMail, message}) => {
+      const userText = new Message({ senderMail, receiverMail, message });
       await userText.save();
       return userText;
     },
