@@ -19,7 +19,11 @@ code {
 }
 
 .selectUser {
-  width: 25%;
+  width: 20%;
+  height: 100%;
+  margin: 10px 0px 0px 10px;
+  background-color: rgba(73, 20, 80, 0.9);
+  color: white;
 }
 
 .personalChat {
@@ -31,6 +35,8 @@ code {
 
 .users {
   cursor: pointer;
+  margin: 10px 0px;
+  padding: 10px;
 }
 
 .message {
