@@ -92,34 +92,46 @@ const deleteMessageMutation = gql`
 
 class App extends Component {
   state = {
-    registered:
-      (localStorage.registrationToken &&
-        JSON.parse(localStorage.registrationToken)) ||
-      [],
+    email: (localStorage.registrationToken && JSON.parse(localStorage.registrationToken).email) || [],
     receiverMail: "",
-    chatText: ""
+    message: "",
+    newPage: false
   };
 
-  handleChange = e => {
-    this.setState({ [e.target.name]: e.target.value });
+  handleChange = ({ target : {name, value }})  => {
+    this.setState({ ...this.state, [name]: value });
   };
 
-  handleSubmit = async (e, chatText) => {
+  handleCreateUser = async (email, name) => {
+    await this.props.createUser({
+      variables: {
+        email: email,
+        name: name
+      },
+      update: (store, { data: { createUser } }) => {
+        const data = store.readQuery({ query: UserQuery });
+        data.users.push(createUser);
+        store.writeQuery({ query: UserQuery, data });
+        this.setState({ newPage: true })
+      }
+    });
+  };
+
+  handleSubmit = async (e, message) => {
     e.preventDefault();
-    const { receiverMail, registered } = this.state;
-    if (!receiverMail.length || !registered.length || !chatText.length)
-      return null;
+    const { receiverMail, email } = this.state;
+    if (!receiverMail.length || !email.length || !message.length) return null;
     await this.props.createMessage({
       variables: {
         receiverMail: receiverMail,
-        senderMail: registered,
-        message: chatText,
+        senderMail: email,
+        message: message
       },
       update: (store, { data: { createMessage } }) => {
         const data = store.readQuery({ query: MessageQuery });
         data.messages.push(createMessage);
         store.writeQuery({ query: MessageQuery, data });
-        this.setState({ chatText: "" });
+        this.setState({ message: "" });
       }
     });
   };
@@ -135,14 +147,15 @@ class App extends Component {
     const {
       user: { users, loading }
     } = this.props;
-    const emailToken = this.state.registered;
+    const emailToken = this.state.email;
     const receiverMail = this.state.receiverMail;
-    const chatText = this.state.chatText;
+    const message = this.state.message;
+    const newPage = this.state.newPage;
     if (loading) return null;
     if (error) return `Error!: ${error}`;
 
-    if (!emailToken.length) {
-      return <Registration />;
+    if (!emailToken.length && !newPage) {
+      return <Registration createUser={this.handleCreateUser} />;
     } else {
       return (
         <div className="chatPage">
@@ -164,20 +177,24 @@ class App extends Component {
               (item.senderMail === receiverMail &&
                 item.receiverMail === emailToken) ? (
                 <div key={item.id} className="message">
-                  <div className="sender">{item.users.map(x => x.name)}</div>
+                  <div className="sender">
+                    {item.users.map((x, y, arr) =>
+                      x.name === arr[y].name ? x.name : ""
+                    )}
+                  </div>
                   {item.message}
                 </div>
               ) : (
                 ""
               )
             )}
-            <form onSubmit={e => this.handleSubmit(e, chatText)}>
+            <form onSubmit={e => this.handleSubmit(e, message)}>
               <TextField
                 style={{ margin: 10 }}
                 placeholder="Placeholder"
                 fullWidth
-                name="chatText"
-                value={chatText}
+                name="message"
+                value={message}
                 onChange={this.handleChange}
                 margin="normal"
                 variant="outlined"

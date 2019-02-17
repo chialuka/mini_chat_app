@@ -5,24 +5,27 @@ import TextField from "@material-ui/core/TextField";
 
 class Registration extends Component {
   state = {
-    name: "",
-    email: ""
+    registration: {
+      name: "",
+      email: ""
+    }
   };
 
-  handleChange = e => {
-    this.setState({ [e.target.name]: e.target.value });
+  handleChange = ({ target }) => {
+    this.setState({ registration: {...this.state.registration, [target.name]: target.value} });
   };
 
   handleSubmit = e => {
     e.preventDefault();
-    const regToken = this.state.email;
+    const {registration: { email, name }} = this.state
+    const regToken = this.state.registration;
     localStorage["registrationToken"] = JSON.stringify(regToken);
+    this.props.createUser(email, name);
   };
 
   render() {
-    const name = this.state.name;
-    const email = this.state.email;
-
+    const name = this.state.registration["name"];
+    const email = this.state.registration["email"];
     return (
       <Paper elevation={8} className="paper">
         <TextField
