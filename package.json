@@ -13,5 +13,9 @@
   "license": "ISC",
   "devDependencies": {
     "concurrently": "^4.1.0"
+  },
+  "dependencies": {
+    "graphql": "^14.1.1",
+    "graphql-subscriptions": "^1.0.0"
   }
 }

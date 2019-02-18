@@ -9,7 +9,10 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "graphql": "^14.1.1",
+    "graphql-subscriptions": "^1.0.0",
     "graphql-yoga": "^1.17.4",
-    "mongoose": "^5.4.12"
+    "mongoose": "^5.4.12",
+    "subscriptions-transport-ws": "^0.9.15"
   }
 }

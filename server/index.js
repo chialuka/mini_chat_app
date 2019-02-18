@@ -1,18 +1,21 @@
-const { GraphQLServer } = require ("graphql-yoga");
-const mongoose = require ("mongoose")
+const { PubSub, withFilter, GraphQLServer } = require("graphql-yoga");
+const mongoose = require("mongoose");
 
-mongoose.connect("mongodb://localhost/anotherTest", { useNewUrlParser: true, useFindAndModify: false })
+mongoose.connect("mongodb://localhost/anotherTest", {
+  useNewUrlParser: true,
+  useFindAndModify: false
+});
 
 const User = mongoose.model("User", {
   name: String,
   email: String
-})
+});
 
 const Message = mongoose.model("Message", {
   message: String,
   senderMail: String,
-  receiverMail: String,
-})
+  receiverMail: String
+});
 
 const typeDefs = `
   type Query {
@@ -44,7 +47,12 @@ const typeDefs = `
     updateMessage(id: ID! message: String!): Message!
     deleteMessage(id: ID!): Boolean!
   }
-`
+
+  type Subscription {
+    newMessage(senderMail: String!): Message
+    newUser: User
+  }
+`;
 
 const resolvers = {
   Query: {
@@ -54,55 +62,77 @@ const resolvers = {
 
   User: {
     messages: async ({ email }) => {
-      return (await Message.find({ senderMail: email }))
+      return await Message.find({ senderMail: email });
     }
   },
 
   Message: {
     users: async ({ senderMail }) => {
-      return (await User.find({ email: senderMail }))
+      return await User.find({ email: senderMail });
     }
   },
 
   Mutation: {
-    createUser: async (_, {name, email}) => {
-      const user = new User({ name, email })
-      await user.save()
+    createUser: async (_, { name, email }) => {
+      const user = new User({ name, email });
+      await user.save();
+      pubsub.publish("newUser", {newUser: user} );
       return user;
     },
 
-    updateUser: async (_, {id, name}) => {
-      const user = User.findOne({ _id: id })
-      await User.findOneAndUpdate({_id: id}, {name})
+    updateUser: async (_, { id, name }) => {
+      const user = User.findOne({ _id: id });
+      await User.findOneAndUpdate({ _id: id }, { name });
       return user;
     },
 
-    deleteUser: async (_, {id}) => {
-      await User.findOneAndDelete({ _id: id })
+    deleteUser: async (_, { id }) => {
+      await User.findOneAndDelete({ _id: id });
       return true;
     },
 
-    createMessage: async (_, {senderMail, receiverMail, message}) => {
+    createMessage: async (_, { senderMail, receiverMail, message }) => {
       const userText = new Message({ senderMail, receiverMail, message });
       await userText.save();
+      pubsub.publish("newMessage", {
+        newMessage: userText,
+        senderMail: senderMail
+      });
       return userText;
     },
 
-    updateMessage: async (_, {id, message}) => {
+    updateMessage: async (_, { id, message }) => {
       const userText = Message.findOne({ _id: id });
-      await Message.findOneAndUpdate({_id: id}, {message});
+      await Message.findOneAndUpdate({ _id: id }, { message });
       return userText;
     },
 
-    deleteMessage: async (_, {id}) => {
+    deleteMessage: async (_, { id }) => {
       await Message.findOneAndDelete({ _id: id });
       return true;
     }
-  }
-}
+  },
 
-const server = new GraphQLServer({ typeDefs, resolvers });
-mongoose.connection.once("open", 
-  () => server.start(
-    () => console.log("server running on localhost:4000"))
-)
+  Subscription: {
+    newMessage: {
+      subscribe: withFilter(
+        () => pubsub.asyncIterator("newMessage"),
+        (payload, variables) => {
+          return payload.senderMail === variables.senderMail;
+        }
+      )
+    },
+
+    newUser: {
+      subscribe: (rootValue, args, {pubsub}) => {
+        return pubsub.asyncIterator("newUser")
+      }
+    }
+  }
+};
+
+const pubsub = new PubSub();
+const server = new GraphQLServer({ typeDefs, resolvers, context: { pubsub } });
+mongoose.connection.once("open", () =>
+  server.start(() => console.log("server running on localhost:4000"))
+);
