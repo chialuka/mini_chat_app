@@ -137,11 +137,12 @@ class App extends Component {
   // }
 
   subscribeToNewMessages = subscribeToMore => {
-    const { receiverMail } = this.state;
+    const { email, receiverMail } = this.state;
+    console.log(email, receiverMail)
     subscribeToMore({
       document: messageSubscription,
       variables: {
-        receiverMail: receiverMail
+        receiverMail: email
       },
       updateQuery: (prev, { subscriptionData }) => {
         if (!subscriptionData.data) return prev;
@@ -149,9 +150,11 @@ class App extends Component {
         if (prev.messages.find(x => x.id === msg.id)) {
           return prev;
         } else {
-          console.log((Object.assign({}, prev, {
-            messages: [...prev.messages, msg]
-          })));
+          console.log(
+            Object.assign({}, prev, {
+              messages: [...prev.messages, msg]
+            })
+          );
           return Object.assign({}, prev, {
             messages: [...prev.messages, msg]
           });
@@ -280,5 +283,5 @@ export default compose(
   graphql(deleteUserMutation, { name: "deleteUser" }),
   graphql(createMessageMutation, { name: "createMessage" }),
   graphql(deleteMessageMutation, { name: "deleteMessage" }),
-  graphql(userSubscription)
+  //graphql(userSubscription)
 )(App);
