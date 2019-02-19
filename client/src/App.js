@@ -90,15 +90,77 @@ const deleteMessageMutation = gql`
   }
 `;
 
+const userSubscription = gql`
+  {
+    newUser {
+      name
+      email
+      id
+      messages {
+        message
+        senderMail
+        receiverMail
+      }
+    }
+  }
+`;
+
+const messageSubscription = gql`
+  subscription($receiverMail: String!) {
+    newMessage(receiverMail: $receiverMail) {
+      message
+      senderMail
+      receiverMail
+      id
+      users {
+        name
+        email
+      }
+    }
+  }
+`;
+
 class App extends Component {
   state = {
-    email: (localStorage.registrationToken && JSON.parse(localStorage.registrationToken).email) || [],
+    email:
+      (localStorage.registrationToken &&
+        JSON.parse(localStorage.registrationToken).email) ||
+      [],
     receiverMail: "",
     message: "",
     newPage: false
   };
 
-  handleChange = ({ target : {name, value }})  => {
+  // componentDidMount() {
+  //   const { receiverMail } = this.state;
+  //   this.props.message
+  // }
+
+  subscribeToNewMessages = subscribeToMore => {
+    const { receiverMail } = this.state;
+    subscribeToMore({
+      document: messageSubscription,
+      variables: {
+        receiverMail: receiverMail
+      },
+      updateQuery: (prev, { subscriptionData }) => {
+        if (!subscriptionData.data) return prev;
+        const msg = subscriptionData.data.newMessage;
+        if (prev.messages.find(x => x.id === msg.id)) {
+          return prev;
+        } else {
+          console.log((Object.assign({}, prev, {
+            messages: [...prev.messages, msg]
+          })));
+          return Object.assign({}, prev, {
+            messages: [...prev.messages, msg]
+          });
+        }
+      }
+    });
+  };
+
+  handleChange = ({ target: { name, value } }) => {
     this.setState({ ...this.state, [name]: value });
   };
 
@@ -112,13 +174,14 @@ class App extends Component {
         const data = store.readQuery({ query: UserQuery });
         data.users.push(createUser);
         store.writeQuery({ query: UserQuery, data });
-        this.setState({ newPage: true })
+        this.setState({ newPage: true });
       }
     });
   };
 
-  handleSubmit = async (e, message) => {
+  handleSubmit = async (e, message, subscribeToMore) => {
     e.preventDefault();
+    this.subscribeToNewMessages(subscribeToMore);
     const { receiverMail, email } = this.state;
     if (!receiverMail.length || !email.length || !message.length) return null;
     await this.props.createMessage({
@@ -142,7 +205,7 @@ class App extends Component {
 
   render() {
     const {
-      message: { error, messages }
+      message: { error, messages, subscribeToMore }
     } = this.props;
     const {
       user: { users, loading }
@@ -188,7 +251,9 @@ class App extends Component {
                 ""
               )
             )}
-            <form onSubmit={e => this.handleSubmit(e, message)}>
+            <form
+              onSubmit={e => this.handleSubmit(e, message, subscribeToMore)}
+            >
               <TextField
                 style={{ margin: 10 }}
                 placeholder="Placeholder"
@@ -214,5 +279,6 @@ export default compose(
   graphql(updateUserMutation, { name: "updateUser" }),
   graphql(deleteUserMutation, { name: "deleteUser" }),
   graphql(createMessageMutation, { name: "createMessage" }),
-  graphql(deleteMessageMutation, { name: "deleteMessage" })
+  graphql(deleteMessageMutation, { name: "deleteMessage" }),
+  graphql(userSubscription)
 )(App);

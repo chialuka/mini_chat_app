@@ -49,7 +49,7 @@ const typeDefs = `
   }
 
   type Subscription {
-    newMessage(senderMail: String!): Message
+    newMessage(receiverMail: String!): Message
     newUser: User
   }
 `;
@@ -96,7 +96,7 @@ const resolvers = {
       await userText.save();
       pubsub.publish("newMessage", {
         newMessage: userText,
-        senderMail: senderMail
+        receiverMail: receiverMail
       });
       return userText;
     },
@@ -118,7 +118,7 @@ const resolvers = {
       subscribe: withFilter(
         () => pubsub.asyncIterator("newMessage"),
         (payload, variables) => {
-          return payload.senderMail === variables.senderMail;
+          return payload.receiverMail === variables.receiverMail;
         }
       )
     },
