@@ -96,7 +96,9 @@ class User extends Component {
       },
       update: (store, { data: { createUser } }) => {
         const data = store.readQuery({ query: UserQuery });
-        data.users.push(createUser);
+        if (!data.users.find(x => x.id === createUser.id)) {
+          data.users.push(createUser);
+        }
         store.writeQuery({ query: UserQuery, data });
         this.setState({ newPage: true });
       }
@@ -116,7 +118,12 @@ class User extends Component {
     const newPage = this.state.newPage;
 
     if (!this.props.email.length && !newPage) {
-      return <Registration createUser={this.handleCreateUser} />;
+      return (
+        <Registration
+          createUser={this.handleCreateUser}
+          setEmailToStorage={this.props.setEmailToStorage}
+        />
+      );
     } else {
       return (
         <div className="chatPage">

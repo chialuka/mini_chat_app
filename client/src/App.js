@@ -15,15 +15,23 @@ class App extends Component {
     this.setState({ receiverMail: receiverMail });
   };
 
+  setEmailToStorage = mail => {
+    this.setState({ email: mail });
+  };
+
   render() {
     const email = this.state.email;
- 
-      return (
-        <div>
-          <User email={email} selectedMail={this.setSelectedMail} />
-          <Message email={email} receiverMail={this.state.receiverMail}/>
-        </div>
-      );
+    console.log(email)
+    return (
+      <div>
+        <User
+          email={email}
+          selectedMail={this.setSelectedMail}
+          setEmailToStorage={this.setEmailToStorage}
+        />
+        <Message email={email} receiverMail={this.state.receiverMail} />
+      </div>
+    );
   }
 }
 
