@@ -39,6 +39,10 @@ code {
   padding: 10px;
 }
 
+.users:hover {
+  background-color: rgb(46, 46, 34);
+}
+
 .message {
   margin: 10px;
 }
@@ -54,4 +58,13 @@ code {
 
 .textArea {
   border: 10px;
+}
+
+.leave {
+  cursor: pointer;
+}
+
+.leave:hover {
+  background-color: rgb(173, 173, 162);
+  color: black;
 }

@@ -44,8 +44,8 @@ const updateUserMutation = gql`
 `;
 
 const deleteUserMutation = gql`
-  mutation($id: ID!) {
-    deleteUser(id: $id)
+  mutation($email: String!) {
+    deleteUser(email: $email)
   }
 `;
 
@@ -66,11 +66,11 @@ const userSubscription = gql`
 
 class User extends Component {
   state = {
-    receiverMail: "",
-    newPage: false
+    newPage: true
   };
 
-  subscribeToNewUser = subscribeToMore => {
+  componentDidMount() {
+    const subscribeToMore = this.props.data.subscribeToMore;
     subscribeToMore({
       document: userSubscription,
       updateQuery: (prev, { subscriptionData }) => {
@@ -85,10 +85,9 @@ class User extends Component {
         }
       }
     });
-  };
+  }
 
   handleCreateUser = async (email, name) => {
-    this.subscribeToNewUser(this.props.data.subscribeToMore);
     await this.props.createUser({
       variables: {
         email: email,
@@ -100,7 +99,23 @@ class User extends Component {
           data.users.push(createUser);
         }
         store.writeQuery({ query: UserQuery, data });
-        this.setState({ newPage: true });
+        //this.setState({ newPage: true });
+      }
+    });
+  };
+
+  deleteUser = async email => {
+    //const newPage = this.state.newPage;
+    await this.props.deleteUser({
+      variables: {
+        email: email
+      },
+      update: store => {
+        const data = store.readQuery({ query: UserQuery });
+        data.users = data.users.filter(x => x.email !== email);
+        store.writeQuery({ query: UserQuery, data });
+        this.setState({ newPage: false });
+        localStorage.removeItem("registrationToken");
       }
     });
   };
@@ -111,23 +126,20 @@ class User extends Component {
 
   render() {
     const {
-      data: { users, loading, error }
+      data: { users, loading, error },
+      email
     } = this.props;
     if (loading) return null;
     if (error) return `Error!: ${error}`;
     const newPage = this.state.newPage;
 
-    if (!this.props.email.length && !newPage) {
-      return (
-        <Registration
-          createUser={this.handleCreateUser}
-          setEmailToStorage={this.props.setEmailToStorage}
-        />
-      );
-    } else {
+    if (this.props.email.length && newPage) {
       return (
         <div className="chatPage">
           <div className="selectUser">
+            <div className="leave" onClick={() => this.deleteUser(email)}>
+              Leave Chat
+            </div>
             {users.map(item => (
               <div
                 key={item.id}
@@ -139,6 +151,13 @@ class User extends Component {
             ))}
           </div>
         </div>
+      );
+    } else {
+      return (
+        <Registration
+          createUser={this.handleCreateUser}
+          setEmailToStorage={this.props.setEmailToStorage}
+        />
       );
     }
   }

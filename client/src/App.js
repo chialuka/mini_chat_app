@@ -3,25 +3,24 @@ import User from "./user";
 import Message from "./message";
 
 class App extends Component {
-  state = {
+  state = { 
     email:
       (localStorage.registrationToken &&
         JSON.parse(localStorage.registrationToken).email) ||
-      [],
+      "",
     receiverMail: ""
   };
 
   setSelectedMail = receiverMail => {
-    this.setState({ receiverMail: receiverMail });
+    this.setState({ receiverMail });
   };
 
-  setEmailToStorage = mail => {
-    this.setState({ email: mail });
+  setEmailToStorage = email => {
+    this.setState({ email });
   };
 
   render() {
     const email = this.state.email;
-    console.log(email)
     return (
       <div>
         <User

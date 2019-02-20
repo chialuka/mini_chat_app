@@ -60,19 +60,14 @@ const messageSubscription = gql`
 
 class Message extends Component {
   state = {
-    message: "",
+    message: ""
   };
 
-  handleChange = ({ target: { name, value } }) => {
-    this.setState({ ...this.state, [name]: value });
-  };
-
-  subscribeToNewMessages = subscribeToMore => {
-    const { email } = this.props;
-    subscribeToMore({
+  componentDidMount() {
+    this.props.message.subscribeToMore({
       document: messageSubscription,
       variables: {
-        receiverMail: email
+        receiverMail: this.props.email
       },
       updateQuery: (prev, { subscriptionData }) => {
         if (!subscriptionData.data) return prev;
@@ -86,12 +81,16 @@ class Message extends Component {
         }
       }
     });
+  }
+
+  handleChange = ({ target: { name, value } }) => {
+    this.setState({ ...this.state, [name]: value });
   };
 
-  handleSubmit = async (e, message, subscribeToMore) => {
+
+  handleSubmit = async (e, message, email) => {
     e.preventDefault();
-    this.subscribeToNewMessages(subscribeToMore);
-    const { receiverMail, email } = this.props;
+    const { receiverMail } = this.props;
     if (!receiverMail.length || !email.length || !message.length) return null;
     await this.props.createMessage({
       variables: {
@@ -110,21 +109,19 @@ class Message extends Component {
 
   render() {
     const {
-      message: { error, loading, messages, subscribeToMore }
+      message: { error, loading, messages },
+      email,
+      receiverMail
     } = this.props;
-    const message = this.state.message;
-    const receiverMail = this.props.receiverMail;
-    const emailToken = this.props.email;
+    const {message} = this.state;
 
     if (error || loading) return null;
 
     return (
       <div className="personalChat">
         {messages.map(item =>
-          (item.senderMail === emailToken &&
-            item.receiverMail === receiverMail) ||
-          (item.senderMail === receiverMail &&
-            item.receiverMail === emailToken) ? (
+          (item.senderMail === email && item.receiverMail === receiverMail) ||
+          (item.senderMail === receiverMail && item.receiverMail === email) ? (
             <div key={item.id} className="message">
               <div className="sender">
                 {item.users.map((x, y, arr) =>
@@ -137,7 +134,7 @@ class Message extends Component {
             ""
           )
         )}
-        <form onSubmit={e => this.handleSubmit(e, message, subscribeToMore)}>
+        <form onSubmit={e => this.handleSubmit(e, message, email)}>
           <TextField
             style={{ margin: 10 }}
             placeholder="Placeholder"

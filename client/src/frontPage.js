@@ -16,19 +16,16 @@ class Registration extends Component {
     this.setState({ registration: {...this.state.registration, [target.name]: target.value} });
   };
 
-  handleSubmit = e => {
-    e.preventDefault();
-    const {registration: { email, name }} = this.state;
-    const regToken = this.state.registration;
-    localStorage["registrationToken"] = JSON.stringify(regToken);
+  handleSubmit = () => {
+    const {registration: { email, name }, registration} = this.state;
+    localStorage["registrationToken"] = JSON.stringify(registration);
     this.props.setEmailToStorage(email);
-    console.log(this.props.setEmailToStorage)
     this.props.createUser(email, name);
+    window.location.reload()
   };
 
   render() {
-    const name = this.state.registration["name"];
-    const email = this.state.registration["email"];
+    const {name, email} = this.state;
     return (
       <Paper elevation={8} className="paper">
         <TextField

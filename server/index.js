@@ -41,11 +41,11 @@ const typeDefs = `
   type Mutation {
     createUser(name: String! email: String!): User!
     updateUser(id: ID! name: String!): User!
-    deleteUser(id: ID!): Boolean!
+    deleteUser(email: String!): Boolean!
 
     createMessage(senderMail: String! receiverMail: String! message: String!): Message!
     updateMessage(id: ID! message: String!): Message!
-    deleteMessage(id: ID!): Boolean!
+    deleteMessage(id: String!): Boolean!
   }
 
   type Subscription {
@@ -86,8 +86,8 @@ const resolvers = {
       return user;
     },
 
-    deleteUser: async (_, { id }) => {
-      await User.findOneAndDelete({ _id: id });
+    deleteUser: async (_, { email }) => {
+      await User.findOneAndDelete({ email: email });
       return true;
     },
 
@@ -108,7 +108,7 @@ const resolvers = {
     },
 
     deleteMessage: async (_, { id }) => {
-      await Message.findOneAndDelete({ _id: id });
+      await Message.deleteMany({ senderMail: id });
       return true;
     }
   },
