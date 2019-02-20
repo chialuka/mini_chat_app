@@ -3,12 +3,13 @@ import Button from "@material-ui/core/Button";
 import Paper from "@material-ui/core/Paper";
 import TextField from "@material-ui/core/TextField";
 
+
 class Registration extends Component {
   state = {
     registration: {
       name: "",
       email: ""
-    }
+    },
   };
 
   handleChange = ({ target }) => {
@@ -17,7 +18,7 @@ class Registration extends Component {
 
   handleSubmit = e => {
     e.preventDefault();
-    const {registration: { email, name }} = this.state
+    const {registration: { email, name }} = this.state;
     const regToken = this.state.registration;
     localStorage["registrationToken"] = JSON.stringify(regToken);
     this.props.createUser(email, name);
