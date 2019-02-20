@@ -105,7 +105,6 @@ class User extends Component {
   };
 
   deleteUser = async email => {
-    //const newPage = this.state.newPage;
     await this.props.deleteUser({
       variables: {
         email: email
