@@ -3,29 +3,38 @@ import Button from "@material-ui/core/Button";
 import Paper from "@material-ui/core/Paper";
 import TextField from "@material-ui/core/TextField";
 
-
 class Registration extends Component {
   state = {
     registration: {
       name: "",
       email: ""
-    },
+    }
   };
 
   handleChange = ({ target }) => {
-    this.setState({ registration: {...this.state.registration, [target.name]: target.value} });
+    this.setState({
+      registration: { ...this.state.registration, [target.name]: target.value }
+    });
   };
 
   handleSubmit = () => {
-    const {registration: { email, name }, registration} = this.state;
+    const {
+      registration: { email, name },
+      registration
+    } = this.state;
     localStorage["registrationToken"] = JSON.stringify(registration);
     this.props.setEmailToStorage(email);
-    this.props.createUser(email, name);
+    //this.callCreateUser(email, name);
     window.location.reload()
+    this.props.createUser(email, name);
   };
 
+  // callCreateUser = (email, name) => {
+  //   this.props.createUser(email, name);
+  // };
+
   render() {
-    const {name, email} = this.state;
+    const { name, email } = this.state;
     return (
       <Paper elevation={8} className="paper">
         <TextField
