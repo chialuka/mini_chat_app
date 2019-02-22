@@ -23,15 +23,10 @@ class Registration extends Component {
       registration
     } = this.state;
     localStorage["registrationToken"] = JSON.stringify(registration);
-    this.props.setEmailToStorage(email);
-    //this.callCreateUser(email, name);
     window.location.reload()
     this.props.createUser(email, name);
   };
 
-  // callCreateUser = (email, name) => {
-  //   this.props.createUser(email, name);
-  // };
 
   render() {
     const { name, email } = this.state;

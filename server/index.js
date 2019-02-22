@@ -14,7 +14,8 @@ const User = mongoose.model("User", {
 const Message = mongoose.model("Message", {
   message: String,
   senderMail: String,
-  receiverMail: String
+  receiverMail: String,
+  timestamp: Number
 });
 
 const typeDefs = `
@@ -35,6 +36,7 @@ const typeDefs = `
     message: String!
     senderMail: String!
     receiverMail: String!
+    timestamp: Float!
     users: [User]
   }
 
@@ -43,7 +45,7 @@ const typeDefs = `
     updateUser(id: ID! name: String!): User!
     deleteUser(email: String!): Boolean!
 
-    createMessage(senderMail: String! receiverMail: String! message: String!): Message!
+    createMessage(senderMail: String! receiverMail: String! message: String! timestamp: Float!): Message!
     updateMessage(id: ID! message: String!): Message!
     deleteMessage(id: String!): Boolean!
   }
@@ -91,8 +93,8 @@ const resolvers = {
       return true;
     },
 
-    createMessage: async (_, { senderMail, receiverMail, message }) => {
-      const userText = new Message({ senderMail, receiverMail, message });
+    createMessage: async (_, { senderMail, receiverMail, message, timestamp }) => {
+      const userText = new Message({ senderMail, receiverMail, message, timestamp });
       await userText.save();
       pubsub.publish("newMessage", {
         newMessage: userText,

@@ -3,11 +3,14 @@ import User from "./user";
 import Message from "./message";
 
 class App extends Component {
-  state = { 
+  state = {
     email:
       (localStorage.registrationToken &&
         JSON.parse(localStorage.registrationToken).email) ||
       "",
+    name: (localStorage.registrationToken &&
+      JSON.parse(localStorage.registrationToken).name) ||
+    "",
     receiverMail: ""
   };
 
@@ -15,16 +18,13 @@ class App extends Component {
     this.setState({ receiverMail });
   };
 
-  setEmailToStorage = email => {
-    this.setState({ email });
-  };
-
   render() {
-    const email = this.state.email;
+    const { email, name } = this.state;
     return (
-      <div>
+      <div className="chatPage">
         <User
           email={email}
+          name={name}
           selectedMail={this.setSelectedMail}
           setEmailToStorage={this.setEmailToStorage}
         />

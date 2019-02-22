@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import gql from "graphql-tag";
 import { graphql, compose } from "react-apollo";
 import TextField from "@material-ui/core/TextField";
+import moment from "moment";
 
 const MessageQuery = gql`
   {
@@ -10,6 +11,7 @@ const MessageQuery = gql`
       message
       senderMail
       receiverMail
+      timestamp
       users {
         name
         email
@@ -19,16 +21,18 @@ const MessageQuery = gql`
 `;
 
 const createMessageMutation = gql`
-  mutation($message: String!, $senderMail: String!, $receiverMail: String!) {
+  mutation($message: String!, $senderMail: String!, $receiverMail: String!, $timestamp: Float!) {
     createMessage(
       message: $message
       senderMail: $senderMail
       receiverMail: $receiverMail
+      timestamp: $timestamp
     ) {
       message
       senderMail
       receiverMail
       id
+      timestamp
       users {
         name
         email
@@ -50,6 +54,7 @@ const messageSubscription = gql`
       senderMail
       receiverMail
       id
+      timestamp
       users {
         name
         email
@@ -96,7 +101,8 @@ class Message extends Component {
       variables: {
         receiverMail: receiverMail,
         senderMail: email,
-        message: message
+        message: message,
+        timestamp: Date.now()
       },
       update: (store, { data: { createMessage } }) => {
         const data = store.readQuery({ query: MessageQuery });
@@ -114,7 +120,6 @@ class Message extends Component {
       receiverMail
     } = this.props;
     const {message} = this.state;
-
     if (error || loading) return null;
 
     return (
@@ -125,10 +130,10 @@ class Message extends Component {
             <div key={item.id} className="message">
               <div className="sender">
                 {item.users.map((x, y, arr) =>
-                  x.name === arr[y].name ? x.name : ""
+                  y === 0 ? x.name: x.name === arr[y - 1].name ? x.name : ""
                 )}
               </div>
-              {item.message}
+              {item.message}  <span className="time"> {moment(item.timestamp).fromNow()}</span>
             </div>
           ) : (
             ""
@@ -137,7 +142,7 @@ class Message extends Component {
         <form onSubmit={e => this.handleSubmit(e, message, email)}>
           <TextField
             style={{ margin: 10 }}
-            placeholder="Placeholder"
+            placeholder="Type your message..."
             fullWidth
             name="message"
             value={message}

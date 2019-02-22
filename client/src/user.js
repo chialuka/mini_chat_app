@@ -59,6 +59,7 @@ const userSubscription = gql`
         message
         senderMail
         receiverMail
+        timestamp
       }
     }
   }
@@ -134,20 +135,25 @@ class User extends Component {
 
     if (this.props.email.length && newPage) {
       return (
-        <div className="chatPage">
+        <div className="userWelcome">
+          <div className="leave" onClick={() => this.deleteUser(email)}>
+            Leave Chat?
+          </div>
+          <p>Hello, {this.props.name}</p>
           <div className="selectUser">
-            <div className="leave" onClick={() => this.deleteUser(email)}>
-              Leave Chat
-            </div>
-            {users.map(item => (
-              <div
-                key={item.id}
-                className="users"
-                onClick={() => this.selectUser(item.email)}
-              >
-                {item.name}
-              </div>
-            ))}
+            {users.map(item =>
+              item.email !== email ? (
+                <div
+                  key={item.id}
+                  className="users"
+                  onClick={() => this.selectUser(item.email)}
+                >
+                  {item.name}
+                </div>
+              ) : (
+                ""
+              )
+            )}
           </div>
         </div>
       );
