@@ -139,7 +139,7 @@ class Message extends Component {
             ""
           )
         )}
-        <form onSubmit={e => this.handleSubmit(e, message, email)}>
+        <form onSubmit={e => this.handleSubmit(e, message, email)} className="chatBox">
           <TextField
             style={{ margin: 10 }}
             placeholder="Type your message..."

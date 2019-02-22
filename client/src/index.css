@@ -20,10 +20,14 @@ code {
 
 .userWelcome {
   width: 20%;
-  height: 100%;
   margin: 10px 0px 0px 10px;
   display: flex;
   flex-direction: column;
+  border-right: 2px solid rgba(70, 70, 70, 0.5);
+  position: fixed;
+  /* float: left;
+  left: 0;
+  top: 0; */
 }
 
 .selectUser {
@@ -40,9 +44,10 @@ p {
 
 .personalChat {
   width: 75%;
-  position: absolute;
-  bottom: 10px;
-  left: 20%;
+  margin-left: 300px;
+  float: right;
+  display: flex;
+  flex-flow: column nowrap;
 }
 
 .users {
@@ -58,6 +63,12 @@ p {
 
 .message {
   margin: 10px;
+}
+
+.chatBox {
+  border: 10px;
+  bottom: 0;
+  width: 75%;
 }
 
 .sender {
@@ -85,5 +96,5 @@ p {
 .time {
   font-size: 10px;
   font-style: italic;
-  color: rgba(17, 236, 236, 0.9)
+  color: rgba(24, 75, 216, 0.9)
 }
