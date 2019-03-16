@@ -133,6 +133,8 @@ class User extends Component {
     if (error) return `Error!: ${error}`;
     const newPage = this.state.newPage;
 
+    console.log(users)
+
     if (this.props.email.length && newPage) {
       return (
         <div className="userWelcome">
@@ -160,6 +162,7 @@ class User extends Component {
     } else {
       return (
         <Registration
+          users={users}
           createUser={this.handleCreateUser}
           setEmailToStorage={this.props.setEmailToStorage}
         />
