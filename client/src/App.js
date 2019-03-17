@@ -8,29 +8,49 @@ class App extends Component {
       (localStorage.registrationToken &&
         JSON.parse(localStorage.registrationToken).email) ||
       "",
-    name: (localStorage.registrationToken &&
-      JSON.parse(localStorage.registrationToken).name) ||
-    "",
-    receiverMail: ""
+    name:
+      (localStorage.registrationToken &&
+        JSON.parse(localStorage.registrationToken).name) ||
+      "",
+    receiverMail: "",
+    receiverName: ""
   };
 
-  setSelectedMail = receiverMail => {
-    this.setState({ receiverMail });
+  setSelectedMail = (receiverMail, receiverName) => {
+    this.setState({ receiverMail, receiverName });
   };
 
   render() {
     const { email, name } = this.state;
-    return (
-      <div className="chatPage">
-        <User
-          email={email}
-          name={name}
-          selectedMail={this.setSelectedMail}
-          setEmailToStorage={this.setEmailToStorage}
-        />
-        <Message email={email} receiverMail={this.state.receiverMail} />
-      </div>
-    );
+
+    if (email.length) {
+      return (
+        <div className="chatPage">
+          <User
+            email={email}
+            name={name}
+            selectedMail={this.setSelectedMail}
+            setEmailToStorage={this.setEmailToStorage}
+          />
+          <Message
+            email={email}
+            receiverMail={this.state.receiverMail}
+            receiverName={this.state.receiverName}
+          />
+        </div>
+      );
+    } else {
+      return (
+        <div className="chatPage">
+          <User
+            email={email}
+            name={name}
+            selectedMail={this.setSelectedMail}
+            setEmailToStorage={this.setEmailToStorage}
+          />
+        </div>
+      );
+    }
   }
 }
 

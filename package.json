@@ -17,6 +17,8 @@
   "dependencies": {
     "graphql": "^14.1.1",
     "graphql-subscriptions": "^1.0.0",
-    "moment": "^2.24.0"
+    "moment": "^2.24.0",
+    "react-router-dom": "^4.4.0",
+    "validator": "^10.11.0"
   }
 }

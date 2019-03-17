@@ -1,14 +1,22 @@
 const { PubSub, withFilter, GraphQLServer } = require("graphql-yoga");
 const mongoose = require("mongoose");
 
-mongoose.connect("mongodb://localhost/anotherTest", {
+mongoose.connect("mongodb://localhost/miniChat", {
   useNewUrlParser: true,
-  useFindAndModify: false
+  useFindAndModify: false,
+  useCreateIndex: true
 });
 
 const User = mongoose.model("User", {
-  name: String,
-  email: String
+  name: {
+    type: String,
+    required: true,
+  },
+  email: {
+    type: String,
+    required: true,
+    index: { unique: true }
+  }
 });
 
 const Message = mongoose.model("Message", {
@@ -41,7 +49,7 @@ const typeDefs = `
   }
 
   type Mutation {
-    createUser(name: String! email: String!): User!
+    createUser(name: String! email: String!): User
     updateUser(id: ID! name: String!): User!
     deleteUser(email: String!): Boolean!
 
@@ -78,7 +86,7 @@ const resolvers = {
     createUser: async (_, { name, email }) => {
       const user = new User({ name, email });
       await user.save();
-      pubsub.publish("newUser", {newUser: user} );
+      pubsub.publish("newUser", { newUser: user });
       return user;
     },
 
@@ -89,12 +97,21 @@ const resolvers = {
     },
 
     deleteUser: async (_, { email }) => {
+      await Message.deleteMany({ senderMail: email })
       await User.findOneAndDelete({ email: email });
       return true;
     },
 
-    createMessage: async (_, { senderMail, receiverMail, message, timestamp }) => {
-      const userText = new Message({ senderMail, receiverMail, message, timestamp });
+    createMessage: async (
+      _,
+      { senderMail, receiverMail, message, timestamp }
+    ) => {
+      const userText = new Message({
+        senderMail,
+        receiverMail,
+        message,
+        timestamp
+      });
       await userText.save();
       pubsub.publish("newMessage", {
         newMessage: userText,
@@ -126,8 +143,8 @@ const resolvers = {
     },
 
     newUser: {
-      subscribe: (rootValue, args, {pubsub}) => {
-        return pubsub.asyncIterator("newUser")
+      subscribe: (rootValue, args, { pubsub }) => {
+        return pubsub.asyncIterator("newUser");
       }
     }
   }
@@ -136,5 +153,5 @@ const resolvers = {
 const pubsub = new PubSub();
 const server = new GraphQLServer({ typeDefs, resolvers, context: { pubsub } });
 mongoose.connection.once("open", () =>
-  server.start(() => console.log("server running on localhost:4000"))
+  server.start(() => console.log("We make magic over at localhost:4000"))
 );

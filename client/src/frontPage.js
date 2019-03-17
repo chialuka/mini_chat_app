@@ -2,13 +2,15 @@ import React, { Component } from "react";
 import Button from "@material-ui/core/Button";
 import Paper from "@material-ui/core/Paper";
 import TextField from "@material-ui/core/TextField";
+import validator from "validator";
 
 class Registration extends Component {
   state = {
     registration: {
       name: "",
       email: ""
-    }
+    },
+    error: ""
   };
 
   handleChange = ({ target }) => {
@@ -17,28 +19,44 @@ class Registration extends Component {
     });
   };
 
-  handleSubmit = () => {
+  validator = () => {
     const {
-      registration: { email, name },
+      registration: { name, email },
       registration
     } = this.state;
-    this.props.users.map(function(user) {
-      if (user.email === email) {
-        alert("Email already in use");
-        return null;
-      } else {
-        localStorage["registrationToken"] = JSON.stringify(registration);
-        window.location.reload()
-        this.props.createUser(email, name);
-      }
-      return null;
+
+    const existingUser = this.props.users.some(function(user) {
+      return user.email === email;
     });
+
+    if (!name.length) {
+      this.setState({ error: "Name is required" });
+    }
+
+    if (!validator.isEmail(email)) {
+      this.setState({ error: "Valid email is required" });
+    }
+
+    if (existingUser) {
+      this.setState({ error: "Email already in use" });
+    }
+
+    if (name.length && validator.isEmail(email) && !existingUser) {
+      localStorage["registrationToken"] = JSON.stringify(registration);
+      this.handleSubmit(email, name);
+    }
+  };
+
+  handleSubmit = (email, name) => {
+    window.location.reload();
+    this.props.createUser(email, name);
   };
 
   render() {
-    const { name, email } = this.state;
+    const { name, email, error } = this.state;
     return (
-      <Paper elevation={8} className="paper">
+      <Paper elevation={3} className="paper">
+        User Details
         <TextField
           required
           id="outlined-name"
@@ -63,11 +81,12 @@ class Registration extends Component {
         />
         <Button
           variant="contained"
-          onClick={this.handleSubmit}
+          onClick={this.validator}
           style={{ margin: 15 }}
         >
-          Register
+          Enter Chat
         </Button>
+        <div>{error}</div>
       </Paper>
     );
   }

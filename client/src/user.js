@@ -67,7 +67,8 @@ const userSubscription = gql`
 
 class User extends Component {
   state = {
-    newPage: true
+    newPage: true,
+    error: ""
   };
 
   componentDidMount() {
@@ -100,7 +101,6 @@ class User extends Component {
           data.users.push(createUser);
         }
         store.writeQuery({ query: UserQuery, data });
-        //this.setState({ newPage: true });
       }
     });
   };
@@ -120,8 +120,8 @@ class User extends Component {
     });
   };
 
-  selectUser = mail => {
-    this.props.selectedMail(mail);
+  selectUser = (mail, name) => {
+    this.props.selectedMail(mail, name);
   };
 
   render() {
@@ -148,7 +148,7 @@ class User extends Component {
                 <div
                   key={item.id}
                   className="users"
-                  onClick={() => this.selectUser(item.email)}
+                  onClick={() => this.selectUser(item.email, item.name)}
                 >
                   {item.name}
                 </div>
@@ -161,7 +161,7 @@ class User extends Component {
       );
     } else {
       return (
-        <Registration
+        <Registration className="registration"
           users={users}
           createUser={this.handleCreateUser}
           setEmailToStorage={this.props.setEmailToStorage}

@@ -117,7 +117,8 @@ class Message extends Component {
     const {
       message: { error, loading, messages },
       email,
-      receiverMail
+      receiverMail,
+      receiverName
     } = this.props;
     const {message} = this.state;
     if (error || loading) return null;
@@ -142,7 +143,7 @@ class Message extends Component {
         <form onSubmit={e => this.handleSubmit(e, message, email)} className="chatBox">
           <TextField
             style={{ margin: 10 }}
-            placeholder="Type your message..."
+            placeholder={"Say something to " + receiverName}
             fullWidth
             name="message"
             value={message}
