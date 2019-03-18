@@ -21,7 +21,12 @@ const MessageQuery = gql`
 `;
 
 const createMessageMutation = gql`
-  mutation($message: String!, $senderMail: String!, $receiverMail: String!, $timestamp: Float!) {
+  mutation(
+    $message: String!
+    $senderMail: String!
+    $receiverMail: String!
+    $timestamp: Float!
+  ) {
     createMessage(
       message: $message
       senderMail: $senderMail
@@ -92,7 +97,6 @@ class Message extends Component {
     this.setState({ ...this.state, [name]: value });
   };
 
-
   handleSubmit = async (e, message, email) => {
     e.preventDefault();
     const { receiverMail } = this.props;
@@ -118,42 +122,62 @@ class Message extends Component {
       message: { error, loading, messages },
       email,
       receiverMail,
-      receiverName
+      receiverName,
+      disabledEmail
     } = this.props;
-    const {message} = this.state;
+    const { message } = this.state;
     if (error || loading) return null;
 
-    return (
-      <div className="personalChat">
-        {messages.map(item =>
-          (item.senderMail === email && item.receiverMail === receiverMail) ||
-          (item.senderMail === receiverMail && item.receiverMail === email) ? (
-            <div key={item.id} className="message">
-              <div className="sender">
-                {item.users.map((x, y, arr) =>
-                  y === 0 ? x.name: x.name === arr[y - 1].name ? x.name : ""
-                )}
+    console.log(disabledEmail)
+
+    if (localStorage.registrationToken) {
+      return (
+        <div className="personalChat">
+          {messages.map(item =>
+            (item.senderMail === email && item.receiverMail === receiverMail) ||
+            (item.senderMail === receiverMail &&
+              item.receiverMail === email) ? (
+              <div key={item.id} className="message">
+                <div className="sender">
+                  {item.users.map((x, y, arr) =>
+                    y === 0 ? x.name : x.name === arr[y - 1].name ? x.name : ""
+                  )}
+                </div>
+                {item.message}{" "}
+                <span className="time">
+                  {" "}
+                  {moment(item.timestamp).fromNow()}
+                </span>
               </div>
-              {item.message}  <span className="time"> {moment(item.timestamp).fromNow()}</span>
-            </div>
-          ) : (
-            ""
-          )
-        )}
-        <form onSubmit={e => this.handleSubmit(e, message, email)} className="chatBox">
-          <TextField
-            style={{ margin: 10 }}
-            placeholder={"Say something to " + receiverName}
-            fullWidth
-            name="message"
-            value={message}
-            onChange={this.handleChange}
-            margin="normal"
-            variant="outlined"
-          />
-        </form>
-      </div>
-    );
+            ) : (
+              ""
+            )
+          )}
+          <div>
+            {disabledEmail && disabledEmail === receiverMail ? (
+              <div>User has left chat and cannot reply you</div>
+            ) : null}
+          </div>
+          <form
+            onSubmit={e => this.handleSubmit(e, message, email)}
+            className="chatBox"
+          >
+            <TextField
+              style={{ margin: 10 }}
+              placeholder={"Say something to " + receiverName}
+              fullWidth
+              name="message"
+              value={message}
+              onChange={this.handleChange}
+              margin="normal"
+              variant="outlined"
+            />
+          </form>
+        </div>
+      );
+    } else {
+      return null;
+    }
   }
 }
 

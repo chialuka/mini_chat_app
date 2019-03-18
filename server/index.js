@@ -61,6 +61,7 @@ const typeDefs = `
   type Subscription {
     newMessage(receiverMail: String!): Message
     newUser: User
+    oldUser: Boolean
   }
 `;
 
@@ -97,8 +98,8 @@ const resolvers = {
     },
 
     deleteUser: async (_, { email }) => {
-      await Message.deleteMany({ senderMail: email })
       await User.findOneAndDelete({ email: email });
+      await Message.deleteMany({ senderMail: email })
       return true;
     },
 
@@ -145,6 +146,12 @@ const resolvers = {
     newUser: {
       subscribe: (rootValue, args, { pubsub }) => {
         return pubsub.asyncIterator("newUser");
+      }
+    },
+
+    oldUser: {
+      subscribe: (rootValue, args, {pubsub}) => {
+        return pubsub.asyncIterator("true")
       }
     }
   }

@@ -16,8 +16,13 @@ class App extends Component {
     receiverMail: "",
     receiverName: "",
     users: [],
-    createUser: ""
+    createUser: "",
+    disabledEmail: ""
   };
+
+  setDisabled = email => {
+    this.setState({ disabledEmail: email})
+  }
 
   getUser = (users, createUser) => {
     this.setState({ users, createUser });
@@ -29,26 +34,25 @@ class App extends Component {
 
   render() {
     const { email, name, users, createUser } = this.state;
-
-    if (users.length && !localStorage.registrationToken) {
-      return <Registration users={users} createUser={createUser} />;
-    } else {
-      return (
-        <div className="chatPage">
-          <User
-            email={email}
-            name={name}
-            selectedMail={this.setSelectedMail}
-            getUser={this.getUser}
-          />
-          <Message
-            email={email}
-            receiverMail={this.state.receiverMail}
-            receiverName={this.state.receiverName}
-          />
-        </div>
-      );
-    }
+    console.log(this.state.disabledEmail)
+    return (
+      <div className="chatPage">
+        <User
+          email={email}
+          name={name}
+          selectedMail={this.setSelectedMail}
+          getUser={this.getUser}
+          setDisabled={this.setDisabled}
+        />
+        <Message
+          email={email}
+          receiverMail={this.state.receiverMail}
+          receiverName={this.state.receiverName}
+          disabledEmail={this.state.disabledEmail}
+        />
+        <Registration users={users} createUser={createUser} />
+      </div>
+    );
   }
 }
 

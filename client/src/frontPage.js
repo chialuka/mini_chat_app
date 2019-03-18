@@ -48,49 +48,54 @@ class Registration extends Component {
   };
 
   handleSubmit = (email, name) => {
-    this.setState({ error: "" })
+    this.setState({ error: "" });
     window.location.reload();
     this.props.createUser(email, name);
   };
 
   render() {
-    console.log(this.props)
+    console.log(this.props);
     const { name, email, error } = this.state;
-    return (
-      <Paper elevation={3} className="paper">
-        User Details
-        <TextField
-          required
-          id="outlined-name"
-          label="Name"
-          name="name"
-          value={name}
-          onChange={this.handleChange}
-          variant="outlined"
-          style={{ margin: 10 }}
-        />
-        <TextField
-          required
-          id="outlined-email-input"
-          type="email"
-          label="Email"
-          name="email"
-          value={email}
-          onChange={this.handleChange}
-          variant="outlined"
-          className="textArea"
-          style={{ margin: 10 }}
-        />
-        <Button
-          variant="contained"
-          onClick={this.validator}
-          style={{ margin: 15 }}
-        >
-          Enter Chat
-        </Button>
-        <div>{error}</div>
-      </Paper>
-    );
+    if (!localStorage.registrationToken) {
+      return (
+        <Paper elevation={3} className="paper">
+          User Details
+          <TextField
+            required
+            id="outlined-name"
+            label="Name"
+            name="name"
+            value={name}
+            onChange={this.handleChange}
+            variant="outlined"
+            style={{ margin: 10 }}
+          />
+          <TextField
+            required
+            id="outlined-email-input"
+            type="email"
+            label="Email"
+            name="email"
+            value={email}
+            onChange={this.handleChange}
+            variant="outlined"
+            className="textArea"
+            style={{ margin: 10 }}
+          />
+          <Button
+            variant="contained"
+            onClick={this.validator}
+            style={{ margin: 15 }}
+          >
+            Enter Chat
+          </Button>
+          <div>{error}</div>
+        </Paper>
+      );
+    } 
+    if (localStorage.registrationToken) {
+      return null
+    }
   }
 }
 
