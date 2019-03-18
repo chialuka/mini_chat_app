@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import gql from "graphql-tag";
 import { graphql, compose } from "react-apollo";
-import Registration from "./frontPage";
+//import Registration from "./frontPage";
 
 const UserQuery = gql`
   {
@@ -66,10 +66,6 @@ const userSubscription = gql`
 `;
 
 class User extends Component {
-  state = {
-    newPage: true,
-    error: ""
-  };
 
   componentDidMount() {
     const subscribeToMore = this.props.data.subscribeToMore;
@@ -89,7 +85,13 @@ class User extends Component {
     });
   }
 
-  handleCreateUser = async (email, name) => {
+  componentDidUpdate(prevProps) {
+    if (prevProps.data.users !== this.props.data.users) {
+      this.props.getUser(this.props.data.users, this.createUser);
+    }
+  }
+
+  createUser = async (email, name) => {
     await this.props.createUser({
       variables: {
         email: email,
@@ -114,7 +116,6 @@ class User extends Component {
         const data = store.readQuery({ query: UserQuery });
         data.users = data.users.filter(x => x.email !== email);
         store.writeQuery({ query: UserQuery, data });
-        this.setState({ newPage: false });
         localStorage.removeItem("registrationToken");
       }
     });
@@ -130,44 +131,31 @@ class User extends Component {
       email
     } = this.props;
     if (loading) return null;
-    if (error) return `Error!: ${error}`;
-    const newPage = this.state.newPage;
+    if (error) return `Error + ${error}`;
 
-    console.log(users)
-
-    if (this.props.email.length && newPage) {
-      return (
-        <div className="userWelcome">
-          <div className="leave" onClick={() => this.deleteUser(email)}>
-            Leave Chat?
-          </div>
-          <p>Hello, {this.props.name}</p>
-          <div className="selectUser">
-            {users.map(item =>
-              item.email !== email ? (
-                <div
-                  key={item.id}
-                  className="users"
-                  onClick={() => this.selectUser(item.email, item.name)}
-                >
-                  {item.name}
-                </div>
-              ) : (
-                ""
-              )
-            )}
-          </div>
+    return (
+      <div className="userWelcome">
+        <div className="leave" onClick={() => this.deleteUser(email)}>
+          Leave Chat?
         </div>
-      );
-    } else {
-      return (
-        <Registration className="registration"
-          users={users}
-          createUser={this.handleCreateUser}
-          setEmailToStorage={this.props.setEmailToStorage}
-        />
-      );
-    }
+        <p>Hello, {this.props.name}</p>
+        <div className="selectUser">
+          {users.map(item =>
+            item.email !== email ? (
+              <div
+                key={item.id}
+                className="users"
+                onClick={() => this.selectUser(item.email, item.name)}
+              >
+                {item.name}
+              </div>
+            ) : (
+              ""
+            )
+          )}
+        </div>
+      </div>
+    );
   }
 }
 

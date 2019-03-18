@@ -48,11 +48,13 @@ class Registration extends Component {
   };
 
   handleSubmit = (email, name) => {
+    this.setState({ error: "" })
     window.location.reload();
     this.props.createUser(email, name);
   };
 
   render() {
+    console.log(this.props)
     const { name, email, error } = this.state;
     return (
       <Paper elevation={3} className="paper">

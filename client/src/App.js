@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import User from "./user";
 import Message from "./message";
+import Registration from "./frontPage";
 
 class App extends Component {
   state = {
@@ -13,7 +14,13 @@ class App extends Component {
         JSON.parse(localStorage.registrationToken).name) ||
       "",
     receiverMail: "",
-    receiverName: ""
+    receiverName: "",
+    users: [],
+    createUser: ""
+  };
+
+  getUser = (users, createUser) => {
+    this.setState({ users, createUser });
   };
 
   setSelectedMail = (receiverMail, receiverName) => {
@@ -21,24 +28,10 @@ class App extends Component {
   };
 
   render() {
-    const { email, name } = this.state;
+    const { email, name, users, createUser } = this.state;
 
-    if (email.length) {
-      return (
-        <div className="chatPage">
-          <User
-            email={email}
-            name={name}
-            selectedMail={this.setSelectedMail}
-            setEmailToStorage={this.setEmailToStorage}
-          />
-          <Message
-            email={email}
-            receiverMail={this.state.receiverMail}
-            receiverName={this.state.receiverName}
-          />
-        </div>
-      );
+    if (users.length && !localStorage.registrationToken) {
+      return <Registration users={users} createUser={createUser} />;
     } else {
       return (
         <div className="chatPage">
@@ -46,7 +39,12 @@ class App extends Component {
             email={email}
             name={name}
             selectedMail={this.setSelectedMail}
-            setEmailToStorage={this.setEmailToStorage}
+            getUser={this.getUser}
+          />
+          <Message
+            email={email}
+            receiverMail={this.state.receiverMail}
+            receiverName={this.state.receiverName}
           />
         </div>
       );
