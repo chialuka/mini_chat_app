@@ -54,7 +54,6 @@ class Registration extends Component {
   };
 
   render() {
-    console.log(this.props);
     const { name, email, error } = this.state;
     if (!localStorage.registrationToken) {
       return (

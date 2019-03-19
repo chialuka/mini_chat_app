@@ -17,8 +17,15 @@ class App extends Component {
     receiverName: "",
     users: [],
     createUser: "",
-    disabledEmail: ""
+    disabledEmail: "",
+    disabled: false
   };
+
+  // componentDidUpdate(prevState) {
+  //   if (prevState.disabledEmail !== this.state.disabledEmail) {
+  //     console.log(prevState.disabledEmail, this.state.disabledEmail)
+  //   }
+  // }
 
   setDisabled = email => {
     this.setState({ disabledEmail: email})
@@ -30,11 +37,12 @@ class App extends Component {
 
   setSelectedMail = (receiverMail, receiverName) => {
     this.setState({ receiverMail, receiverName });
+    //console.log(receiverMail, this.state.disabledEmail)
   };
 
   render() {
     const { email, name, users, createUser } = this.state;
-    console.log(this.state.disabledEmail)
+    console.log(this.state.disabledEmail, users)
     return (
       <div className="chatPage">
         <User

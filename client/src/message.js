@@ -91,7 +91,18 @@ class Message extends Component {
         }
       }
     });
+    //this.scrollToBottom();
   }
+
+  componentDidUpdate(prevState) {
+    if (this.state.message !== prevState.message) {
+      this.scrollToBottom()
+    }
+  }
+
+  scrollToBottom = () => {
+    this.node.scrollIntoView({ behavior: "smooth" });
+  };
 
   handleChange = ({ target: { name, value } }) => {
     this.setState({ ...this.state, [name]: value });
@@ -100,7 +111,7 @@ class Message extends Component {
   handleSubmit = async (e, message, email) => {
     e.preventDefault();
     const { receiverMail } = this.props;
-    if (!receiverMail.length || !email.length || !message.length) return null;
+    if (!message.length) return null;
     await this.props.createMessage({
       variables: {
         receiverMail: receiverMail,
@@ -115,6 +126,7 @@ class Message extends Component {
         this.setState({ message: "" });
       }
     });
+    this.scrollToBottom()
   };
 
   render() {
@@ -128,34 +140,40 @@ class Message extends Component {
     const { message } = this.state;
     if (error || loading) return null;
 
-    console.log(disabledEmail)
+    console.log(disabledEmail);
 
     if (localStorage.registrationToken) {
       return (
         <div className="personalChat">
-          {messages.map(item =>
-            (item.senderMail === email && item.receiverMail === receiverMail) ||
-            (item.senderMail === receiverMail &&
-              item.receiverMail === email) ? (
-              <div key={item.id} className="message">
-                <div className="sender">
-                  {item.users.map((x, y, arr) =>
-                    y === 0 ? x.name : x.name === arr[y - 1].name ? x.name : ""
+          <div className="allMessages">
+            {messages.map(item =>
+              (item.senderMail === email &&
+                item.receiverMail === receiverMail) ||
+              (item.senderMail === receiverMail &&
+                item.receiverMail === email) ? (
+                <div
+                  key={item.id}
+                  className={item.users.map(a =>
+                    a.name === receiverName ? "receiver" : "sender"
                   )}
+                >
+                  <div className="senderName">
+                    {item.users.map(x => x.name)}
+                  </div>
+                  {item.message}{" "}
+                  <span className="time">
+                    {" "}
+                    {moment(item.timestamp).fromNow()}
+                  </span>
                 </div>
-                {item.message}{" "}
-                <span className="time">
-                  {" "}
-                  {moment(item.timestamp).fromNow()}
-                </span>
-              </div>
-            ) : (
-              ""
-            )
-          )}
+              ) : (
+                ""
+              )
+            )}
+          </div>
           <div>
             {disabledEmail && disabledEmail === receiverMail ? (
-              <div>User has left chat and cannot reply you</div>
+              <div>User has left chat and can no longer reply you</div>
             ) : null}
           </div>
           <form
@@ -173,6 +191,11 @@ class Message extends Component {
               variant="outlined"
             />
           </form>
+          <div
+            ref={node => {
+              this.node = node;
+            }}
+          />
         </div>
       );
     } else {

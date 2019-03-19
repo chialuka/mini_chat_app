@@ -71,10 +71,15 @@ const addUserSubscription = gql`
 // `;
 
 class User extends Component {
+  state = {
+    disabledEmail: ""
+  };
+
   componentDidMount() {
     const subscribeToMore = this.props.data.subscribeToMore;
+    console.log(subscribeToMore)
     subscribeToMore({
-      document: (addUserSubscription),
+      document: addUserSubscription,
       updateQuery: (prev, { subscriptionData }) => {
         if (!subscriptionData.data) return prev;
         const user = subscriptionData.data.newUser;
@@ -89,8 +94,12 @@ class User extends Component {
     });
   }
 
-  componentDidUpdate(prevProps) {
-    if (prevProps.data.users !== this.props.data.users) {
+  componentDidUpdate(prevProps, prevState) {
+    if (
+      prevProps.data.users !== this.props.data.users ||
+      prevState.disabledEmail !== this.state.disabledEmail
+    ) {
+      console.log("yesss", prevState.disabledEmail, this.state.disabledEmail)
       this.props.getUser(this.props.data.users, this.createUser);
     }
   }
@@ -120,10 +129,11 @@ class User extends Component {
         const data = store.readQuery({ query: UserQuery });
         data.users = data.users.filter(x => x.email !== email);
         store.writeQuery({ query: UserQuery, data });
+        this.setState({ disabledEmail: email });
         localStorage.removeItem("registrationToken");
+        this.props.setDisabled(email);
       }
     });
-    this.props.setDisabled(email)
   };
 
   selectUser = (mail, name) => {
@@ -138,7 +148,6 @@ class User extends Component {
     } = this.props;
     if (loading) return null;
     if (error) return `Error + ${error}`;
-    console.log(this.props)
 
     if (localStorage.registrationToken) {
       return (

@@ -19,7 +19,7 @@ code {
 }
 
 .userWelcome {
-  width: 20%;
+  width: 25%;
   margin: 10px 0px 0px 10px;
   display: flex;
   flex-direction: column;
@@ -39,11 +39,35 @@ p {
 }
 
 .personalChat {
-  width: 75%;
-  margin-left: 300px;
+  width: 70%;
+  margin-left: 400px;
   float: right;
   display: flex;
-  flex-flow: column nowrap;
+  flex-direction: column;
+  min-height: 100%;
+  position: relative
+}
+
+.allMessages {
+  padding-bottom: 100px;
+}
+
+.sender {
+  /* background-color: rgb(192, 188, 188); */
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  margin: 5px;
+  /* width: 35%; */
+}
+
+.receiver {
+  /* background-color: rgb(141, 138, 138); */
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin: 5px;
+  /* width: 35% */
 }
 
 .users {
@@ -57,17 +81,16 @@ p {
   color: black;
 }
 
-.message {
-  margin: 10px;
-}
-
 .chatBox {
   border: 10px;
   bottom: 0;
-  width: 75%;
+  justify-content: center;
+  position: fixed;
+  height: 100px;
+  width: 100%;
 }
 
-.sender {
+.senderName {
   font-weight: bold;
   font-family:  "Book Antiqua";
 }
