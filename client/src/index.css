@@ -13,10 +13,10 @@ code {
     monospace;
 }
 
-.chatPage {
+/* .chatPage {
   display: flex;
   flex-flow: row nowrap;
-}
+} */
 
 .userWelcome {
   width: 25%;
@@ -42,14 +42,19 @@ p {
   width: 70%;
   margin-left: 400px;
   float: right;
-  display: flex;
-  flex-direction: column;
+  /* display: flex;
+  flex-direction: column; */
   min-height: 100%;
   position: relative
 }
 
 .allMessages {
   padding-bottom: 100px;
+  /* position: absolute;
+  bottom: 0; */
+  /* display: flex;
+  flex-direction: column;
+  justify-content: flex-end; */
 }
 
 .sender {

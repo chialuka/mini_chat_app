@@ -69,6 +69,13 @@ const messageSubscription = gql`
 `;
 
 class Message extends Component {
+  // constructor(props) {
+  //   super(props);
+  //   this.chatBox = React.createRef();
+  //   this.state = {
+  //     message: ""
+  //   };
+  // }
   state = {
     message: ""
   };
@@ -91,17 +98,21 @@ class Message extends Component {
         }
       }
     });
-    //this.scrollToBottom();
+    if (this.chatBox) {
+      this.scrollToBottom();
+    }
   }
 
   componentDidUpdate(prevState) {
     if (this.state.message !== prevState.message) {
-      this.scrollToBottom()
+      if (this.chatBox) {
+        this.scrollToBottom();
+      }
     }
   }
 
   scrollToBottom = () => {
-    this.node.scrollIntoView({ behavior: "smooth" });
+    this.chatBox.scrollIntoView();
   };
 
   handleChange = ({ target: { name, value } }) => {
@@ -126,7 +137,6 @@ class Message extends Component {
         this.setState({ message: "" });
       }
     });
-    this.scrollToBottom()
   };
 
   render() {
@@ -140,7 +150,6 @@ class Message extends Component {
     const { message } = this.state;
     if (error || loading) return null;
 
-    console.log(disabledEmail);
 
     if (localStorage.registrationToken) {
       return (
@@ -192,8 +201,8 @@ class Message extends Component {
             />
           </form>
           <div
-            ref={node => {
-              this.node = node;
+            ref={chatBox => {
+              this.chatBox = chatBox;
             }}
           />
         </div>
