@@ -69,15 +69,20 @@ const messageSubscription = gql`
 `;
 
 class Message extends Component {
-  // constructor(props) {
-  //   super(props);
-  //   this.chatBox = React.createRef();
-  //   this.state = {
-  //     message: ""
-  //   };
-  // }
   state = {
-    message: ""
+    message: "",
+    oldScrollPoint: window.pageYOffset,
+    formIsShown: false
+  };
+
+  hideForm = () => {
+    const { oldScrollPoint } = this.state;
+    const newScrollPoint = window.pageYOffset;
+
+    const formIsShown = oldScrollPoint < newScrollPoint;
+    console.log(oldScrollPoint, newScrollPoint, formIsShown)
+
+    this.setState({ oldScrollPoint: newScrollPoint, formIsShown });
   };
 
   componentDidMount() {
@@ -101,6 +106,11 @@ class Message extends Component {
     if (this.chatBox) {
       this.scrollToBottom();
     }
+    //window.addEventListener("scroll", this.hideForm);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener("scroll", this.hideForm);
   }
 
   componentDidUpdate(prevState) {
@@ -150,7 +160,6 @@ class Message extends Component {
     const { message } = this.state;
     if (error || loading) return null;
 
-
     if (localStorage.registrationToken) {
       return (
         <div className="personalChat">
@@ -187,7 +196,9 @@ class Message extends Component {
           </div>
           <form
             onSubmit={e => this.handleSubmit(e, message, email)}
-            className="chatBox"
+            className={`chatBox ${
+              this.state.formIsShown ? "chatBox--hidden" : ""
+            }`}
           >
             <TextField
               style={{ margin: 10 }}
@@ -200,6 +211,7 @@ class Message extends Component {
               variant="outlined"
             />
           </form>
+
           <div
             ref={chatBox => {
               this.chatBox = chatBox;

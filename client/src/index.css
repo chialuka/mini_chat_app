@@ -63,16 +63,20 @@ p {
   flex-direction: column;
   align-items: flex-end;
   margin: 5px;
-  /* width: 35%; */
+  /* float: right;
+  width: 440px; */
+  padding: 5px;
 }
 
 .receiver {
-  /* background-color: rgb(141, 138, 138); */
+  /* background-color: rgb(194, 189, 189); */
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   margin: 5px;
-  /* width: 35% */
+  /* float: left;
+  width: 440px; */
+  padding: 5px;
 }
 
 .users {
@@ -90,9 +94,14 @@ p {
   border: 10px;
   bottom: 0;
   justify-content: center;
-  position: fixed;
+  position: absolute;
   height: 100px;
   width: 100%;
+  transition: bottom 0.5s
+}
+
+.chatBox--hidden {
+  display: none;
 }
 
 .senderName {

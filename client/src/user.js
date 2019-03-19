@@ -77,7 +77,6 @@ class User extends Component {
 
   componentDidMount() {
     const subscribeToMore = this.props.data.subscribeToMore;
-    console.log(subscribeToMore)
     subscribeToMore({
       document: addUserSubscription,
       updateQuery: (prev, { subscriptionData }) => {
@@ -94,12 +93,9 @@ class User extends Component {
     });
   }
 
-  componentDidUpdate(prevProps, prevState) {
+  componentDidUpdate(prevProps) {
     if (
-      prevProps.data.users !== this.props.data.users ||
-      prevState.disabledEmail !== this.state.disabledEmail
-    ) {
-      console.log("yesss", prevState.disabledEmail, this.state.disabledEmail)
+      prevProps.data.users !== this.props.data.users) {
       this.props.getUser(this.props.data.users, this.createUser);
     }
   }
