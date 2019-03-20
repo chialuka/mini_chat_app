@@ -158,7 +158,7 @@ class Message extends Component {
     const { message } = this.state;
     if (error || loading) return null;
 
-    if (localStorage.registrationToken) {
+    if (localStorage.token) {
       return (
         <div className="personalChat">
           <div className="allMessages">

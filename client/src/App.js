@@ -6,12 +6,12 @@ import Registration from "./frontPage";
 class App extends Component {
   state = {
     email:
-      (localStorage.registrationToken &&
-        JSON.parse(localStorage.registrationToken).email) ||
+      (localStorage.token &&
+        JSON.parse(localStorage.token).email) ||
       "",
     name:
-      (localStorage.registrationToken &&
-        JSON.parse(localStorage.registrationToken).name) ||
+      (localStorage.token &&
+        JSON.parse(localStorage.token).name) ||
       "",
     receiverMail: "",
     receiverName: "",

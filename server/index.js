@@ -10,7 +10,7 @@ mongoose.connect("mongodb://localhost/miniChat", {
 const User = mongoose.model("User", {
   name: {
     type: String,
-    required: true,
+    required: true
   },
   email: {
     type: String,
@@ -91,14 +91,19 @@ const resolvers = {
     },
 
     updateUser: async (_, { id, name }) => {
-      const user = User.findOne({ _id: id });
-      await User.findOneAndUpdate({ _id: id }, { name });
+      const user = await User.findOneAndUpdate(
+        { _id: id },
+        { name },
+        { new: true }
+      );
       return user;
     },
 
     deleteUser: async (_, { email }) => {
-      await User.findOneAndDelete({ email: email });
-      await Message.deleteMany({ senderMail: email })
+      await Promise.all([
+        User.findOneAndDelete({ email: email }),
+        Message.deleteMany({ senderMail: email })
+      ]);
       return true;
     },
 
@@ -121,8 +126,11 @@ const resolvers = {
     },
 
     updateMessage: async (_, { id, message }) => {
-      const userText = Message.findOne({ _id: id });
-      await Message.findOneAndUpdate({ _id: id }, { message });
+      const userText = await Message.findOneAndUpdate(
+        { _id: id },
+        { message },
+        { new: true }
+      );
       return userText;
     },
 
@@ -146,8 +154,7 @@ const resolvers = {
       subscribe: (rootValue, args, { pubsub }) => {
         return pubsub.asyncIterator("newUser");
       }
-    },
-
+    }
   }
 };
 

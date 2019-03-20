@@ -64,17 +64,8 @@ const addUserSubscription = gql`
   }
 `;
 
-// const deleteUserSubscription = gql`
-//   subscription {
-//     oldUser
-//   }
-// `;
 
 class User extends Component {
-  state = {
-    disabledEmail: ""
-  };
-
   componentDidMount() {
     const subscribeToMore = this.props.data.subscribeToMore;
     subscribeToMore({
@@ -122,9 +113,7 @@ class User extends Component {
         const data = store.readQuery({ query: UserQuery });
         data.users = data.users.filter(x => x.email !== email);
         store.writeQuery({ query: UserQuery, data });
-        this.setState({ disabledEmail: email });
-        localStorage.removeItem("registrationToken");
-        this.props.setDisabled(email);
+        localStorage.removeItem("token");
       }
     });
   };
@@ -142,7 +131,7 @@ class User extends Component {
     if (loading) return null;
     if (error) return `Error + ${error}`;
 
-    if (localStorage.registrationToken) {
+    if (localStorage.token) {
       return (
         <div className="userWelcome">
           <div className="leave" onClick={() => this.deleteUser(email)}>

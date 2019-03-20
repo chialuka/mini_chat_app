@@ -42,7 +42,7 @@ class Registration extends Component {
     }
 
     if (name.length && validator.isEmail(email) && !existingUser) {
-      localStorage["registrationToken"] = JSON.stringify(registration);
+      localStorage["token"] = JSON.stringify(registration);
       this.handleSubmit(email, name);
     }
   };
@@ -50,12 +50,14 @@ class Registration extends Component {
   handleSubmit = (email, name) => {
     window.location.reload();
     this.setState({ error: "" });
+    console.log(this.props.createUser, "create User")
     this.props.createUser(email, name);
   };
 
   render() {
+    console.log(this.props.createUser)
     const { name, email, error } = this.state;
-    if (!localStorage.registrationToken) {
+    if (!localStorage.token) {
       return (
         <Paper elevation={3} className="paper">
           User Details
