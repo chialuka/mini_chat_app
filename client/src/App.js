@@ -17,8 +17,6 @@ class App extends Component {
     receiverName: "",
     users: [],
     createUser: "",
-    disabledEmail: "",
-    disabled: false
   };
 
   setDisabled = email => {

@@ -48,8 +48,8 @@ class Registration extends Component {
   };
 
   handleSubmit = (email, name) => {
-    this.setState({ error: "" });
     window.location.reload();
+    this.setState({ error: "" });
     this.props.createUser(email, name);
   };
 
@@ -91,10 +91,8 @@ class Registration extends Component {
           <div>{error}</div>
         </Paper>
       );
-    } 
-    if (localStorage.registrationToken) {
-      return null
     }
+    return null;
   }
 }
 

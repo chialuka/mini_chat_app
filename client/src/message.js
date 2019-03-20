@@ -80,7 +80,7 @@ class Message extends Component {
     const newScrollPoint = window.pageYOffset;
 
     const formIsShown = oldScrollPoint < newScrollPoint;
-    console.log(oldScrollPoint, newScrollPoint, formIsShown)
+    console.log(oldScrollPoint, newScrollPoint, formIsShown);
 
     this.setState({ oldScrollPoint: newScrollPoint, formIsShown });
   };
@@ -97,9 +97,7 @@ class Message extends Component {
         if (prev.messages.find(x => x.id === msg.id)) {
           return prev;
         } else {
-          return Object.assign({}, prev, {
-            messages: [...prev.messages, msg]
-          });
+          return { ...prev, messages: [...prev.messages, msg] };
         }
       }
     });
@@ -219,9 +217,8 @@ class Message extends Component {
           />
         </div>
       );
-    } else {
-      return null;
     }
+    return null;
   }
 }
 

@@ -49,7 +49,7 @@ const typeDefs = `
   }
 
   type Mutation {
-    createUser(name: String! email: String!): User
+    createUser(name: String! email: String!): User!
     updateUser(id: ID! name: String!): User!
     deleteUser(email: String!): Boolean!
 
@@ -61,7 +61,6 @@ const typeDefs = `
   type Subscription {
     newMessage(receiverMail: String!): Message
     newUser: User
-    oldUser: Boolean
   }
 `;
 
@@ -149,11 +148,6 @@ const resolvers = {
       }
     },
 
-    oldUser: {
-      subscribe: (rootValue, args, {pubsub}) => {
-        return pubsub.asyncIterator("true")
-      }
-    }
   }
 };
 

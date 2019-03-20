@@ -83,9 +83,7 @@ class User extends Component {
         if (!subscriptionData.data) return prev;
         const user = subscriptionData.data.newUser;
         if (!prev.users.find(x => x.id === user.id)) {
-          return Object.assign({}, prev, {
-            users: [...prev.users, user]
-          });
+          return { ...prev, users: [...prev.users, user] };
         } else {
           return prev;
         }
@@ -94,8 +92,7 @@ class User extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (
-      prevProps.data.users !== this.props.data.users) {
+    if (prevProps.data.users !== this.props.data.users) {
       this.props.getUser(this.props.data.users, this.createUser);
     }
   }
@@ -169,9 +166,8 @@ class User extends Component {
           </div>
         </div>
       );
-    } else {
-      return null;
     }
+    return null;
   }
 }
 
