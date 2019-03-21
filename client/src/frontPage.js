@@ -1,101 +1,81 @@
-import React, { Component } from "react";
+import React, { useState } from "react";
 import Button from "@material-ui/core/Button";
 import Paper from "@material-ui/core/Paper";
 import TextField from "@material-ui/core/TextField";
 import validator from "validator";
 
-class Registration extends Component {
-  state = {
-    registration: {
-      name: "",
-      email: ""
-    },
-    error: ""
-  };
+const Registration = props => {
+  const [token, setToken] = useState({ name: "", email: "" });
+  //const [emailState, setEmail] = useState("")
+  const [error, setError] = useState("");
 
-  handleChange = ({ target }) => {
-    this.setState({
-      registration: { ...this.state.registration, [target.name]: target.value }
-    });
-  };
+  const validate = () => {
+    const { name, email } = token;
 
-  validator = () => {
-    const {
-      registration: { name, email },
-      registration
-    } = this.state;
-
-    const existingUser = this.props.users.some(function(user) {
+    const existingUser = props.users.some(function(user) {
       return user.email === email;
     });
 
     if (!name.length) {
-      this.setState({ error: "Name is required" });
+      setError({ error: "Name is required" });
     }
 
     if (!validator.isEmail(email)) {
-      this.setState({ error: "Valid email is required" });
+      setError({ error: "Valid email is required" });
     }
 
     if (existingUser) {
-      this.setState({ error: "Email already in use" });
+      setError({ error: "Email already in use" });
     }
 
     if (name.length && validator.isEmail(email) && !existingUser) {
-      localStorage["token"] = JSON.stringify(registration);
-      this.handleSubmit(email, name);
+      window.location.reload();
+      setError({ error: "" });
+      props.createUser(email, name);
+      localStorage["token"] = JSON.stringify(token);
     }
   };
 
-  handleSubmit = (email, name) => {
-    window.location.reload();
-    this.setState({ error: "" });
-    console.log(this.props.createUser, "create User")
-    this.props.createUser(email, name);
-  };
-
-  render() {
-    console.log(this.props.createUser)
-    const { name, email, error } = this.state;
-    if (!localStorage.token) {
-      return (
-        <Paper elevation={3} className="paper">
-          User Details
-          <TextField
-            required
-            id="outlined-name"
-            label="Name"
-            name="name"
-            value={name}
-            onChange={this.handleChange}
-            variant="outlined"
-            style={{ margin: 10 }}
-          />
-          <TextField
-            required
-            id="outlined-email-input"
-            type="email"
-            label="Email"
-            name="email"
-            value={email}
-            onChange={this.handleChange}
-            variant="outlined"
-            className="textArea"
-            style={{ margin: 10 }}
-          />
-          <Button
-            variant="contained"
-            onClick={this.validator}
-            style={{ margin: 15 }}
-          >
-            Enter Chat
-          </Button>
-          <div>{error}</div>
-        </Paper>
-      );
-    }
-    return null;
-  }
-}
+  const { name, email } = token;
+  return (
+    <Paper elevation={3} className="paper">
+      User Details
+      <TextField
+        required
+        id="outlined-name"
+        label="Name"
+        name="name"
+        value={name}
+        onChange={e =>
+          setToken(tokenState => {
+            return { ...tokenState, name: e.target.value };
+          })
+        }
+        variant="outlined"
+        style={{ margin: 10 }}
+      />
+      <TextField
+        required
+        id="outlined-email-input"
+        type="email"
+        label="Email"
+        name="email"
+        value={email}
+        onChange={e =>
+          setToken(tokenState => {
+            return { ...tokenState, email: e.target.value };
+          })
+        }
+        variant="outlined"
+        className="textArea"
+        style={{ margin: 10 }}
+      />
+      <Button variant="contained" onClick={validate} style={{ margin: 15 }}>
+        Enter Chat
+      </Button>
+      <div>{error}</div>
+    </Paper>
+  );
+};
 
 export default Registration;

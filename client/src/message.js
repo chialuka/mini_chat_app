@@ -128,6 +128,7 @@ class Message extends Component {
   };
 
   handleSubmit = async (e, message, email) => {
+    this.setState({ message: "" });
     e.preventDefault();
     const { receiverMail } = this.props;
     if (!message.length) return null;
@@ -142,7 +143,6 @@ class Message extends Component {
         const data = store.readQuery({ query: MessageQuery });
         data.messages.push(createMessage);
         store.writeQuery({ query: MessageQuery, data });
-        this.setState({ message: "" });
       }
     });
   };

@@ -1,57 +1,150 @@
-import React, { Component } from "react";
+import React, { useState, useEffect } from "react";
 import User from "./user";
 import Message from "./message";
 import Registration from "./frontPage";
+import gql from "graphql-tag";
+import { graphql, compose } from "react-apollo";
 
-class App extends Component {
-  state = {
-    email:
-      (localStorage.token &&
-        JSON.parse(localStorage.token).email) ||
-      "",
-    name:
-      (localStorage.token &&
-        JSON.parse(localStorage.token).name) ||
-      "",
+const UserQuery = gql`
+  {
+    users {
+      id
+      name
+      email
+      messages {
+        message
+        senderMail
+        receiverMail
+      }
+    }
+  }
+`;
+
+const CreateUserMutation = gql`
+  mutation($name: String!, $email: String!) {
+    createUser(name: $name, email: $email) {
+      name
+      email
+      id
+      messages {
+        message
+        senderMail
+        receiverMail
+      }
+    }
+  }
+`;
+
+const deleteUserMutation = gql`
+  mutation($email: String!) {
+    deleteUser(email: $email)
+  }
+`;
+
+const addUserSubscription = gql`
+  subscription {
+    newUser {
+      name
+      email
+      id
+      messages {
+        message
+        senderMail
+        receiverMail
+        timestamp
+      }
+    }
+  }
+`;
+
+const App = props => {
+  const email =
+    (localStorage.token && JSON.parse(localStorage.token).email) || "";
+  const name =
+    (localStorage.token && JSON.parse(localStorage.token).name) || "";
+  const [receiverState, setReceiverState] = useState({
     receiverMail: "",
-    receiverName: "",
-    users: [],
-    createUser: "",
+    receiverName: ""
+  });
+
+  const setSelectedMail = (mail, user) => {
+    setReceiverState(receiverState => {
+      return { ...receiverState, receiverMail: mail, receiverName: user };
+    });
   };
 
-  setDisabled = email => {
-    this.setState({ disabledEmail: email})
-  }
+  useEffect(() => {
+    const subscribeToMore = props.data.subscribeToMore;
+    subscribeToMore({
+      document: addUserSubscription,
+      updateQuery: (prev, { subscriptionData }) => {
+        if (!subscriptionData.data) return prev;
+        const user = subscriptionData.data.newUser;
+        if (!prev.users.find(x => x.id === user.id)) {
+          return { ...prev, users: [...prev.users, user] };
+        }
+        return prev;
+      }
+    });
+  });
 
-  getUser = (users, createUser) => {
-    this.setState({ users, createUser });
+  const createUser = async (email, name) => {
+    await props.createUser({
+      variables: {
+        email: email,
+        name: name
+      },
+      update: (store, { data: { createUser } }) => {
+        const data = store.readQuery({ query: UserQuery });
+        if (!data.users.find(x => x.id === createUser.id)) {
+          data.users.push(createUser);
+        }
+        store.writeQuery({ query: UserQuery, data });
+      }
+    });
   };
 
-  setSelectedMail = (receiverMail, receiverName) => {
-    this.setState({ receiverMail, receiverName });
+  const deleteUser = async email => {
+    await props.deleteUser({
+      variables: {
+        email: email
+      },
+      update: store => {
+        const data = store.readQuery({ query: UserQuery });
+        data.users = data.users.filter(x => x.email !== email);
+        store.writeQuery({ query: UserQuery, data });
+        localStorage.removeItem("token");
+      }
+    });
   };
 
-  render() {
-    const { email, name, users, createUser } = this.state;
-    return (
-      <div className="chatPage">
-        <User
-          email={email}
-          name={name}
-          selectedMail={this.setSelectedMail}
-          getUser={this.getUser}
-          setDisabled={this.setDisabled}
-        />
-        <Message
-          email={email}
-          receiverMail={this.state.receiverMail}
-          receiverName={this.state.receiverName}
-          disabledEmail={this.state.disabledEmail}
-        />
-        <Registration users={users} createUser={createUser} />
-      </div>
-    );
-  }
-}
+  const { receiverMail, receiverName } = receiverState;
+  const {
+    data: { users, error, loading }
+  } = props;
 
-export default App;
+  if (loading || error) return null;
+  return (
+    <div className="chatPage">
+      <User
+        users={users}
+        email={email}
+        name={name}
+        selectedMail={setSelectedMail}
+        deleteUser={deleteUser}
+      />
+      <Message
+        email={email}
+        receiverMail={receiverMail}
+        receiverName={receiverName}
+      />
+      <Registration users={users} createUser={createUser} />
+    </div>
+  );
+};
+
+export default compose(
+  graphql(UserQuery),
+  graphql(CreateUserMutation, { name: "createUser" }),
+  graphql(deleteUserMutation, { name: "deleteUser" })
+)(App);
