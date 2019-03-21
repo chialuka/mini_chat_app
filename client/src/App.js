@@ -124,23 +124,25 @@ const App = props => {
   } = props;
 
   if (loading || error) return null;
-  return (
-    <div className="chatPage">
-      <User
-        users={users}
-        email={email}
-        name={name}
-        selectedMail={setSelectedMail}
-        deleteUser={deleteUser}
-      />
-      <Message
-        email={email}
-        receiverMail={receiverMail}
-        receiverName={receiverName}
-      />
-      <Registration users={users} createUser={createUser} />
-    </div>
-  );
+  if (localStorage.token) {
+    return (
+      <div className="chatPage">
+        <User
+          users={users}
+          email={email}
+          name={name}
+          selectedMail={setSelectedMail}
+          deleteUser={deleteUser}
+        />
+        <Message
+          email={email}
+          receiverMail={receiverMail}
+          receiverName={receiverName}
+        />
+      </div>
+    );
+  }
+  return <Registration users={users} createUser={createUser} />;
 };
 
 export default compose(

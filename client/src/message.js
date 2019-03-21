@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import gql from "graphql-tag";
 import { graphql, compose } from "react-apollo";
 import TextField from "@material-ui/core/TextField";
@@ -68,28 +68,16 @@ const messageSubscription = gql`
   }
 `;
 
-class Message extends Component {
-  state = {
-    message: "",
-    oldScrollPoint: window.pageYOffset,
-    formIsShown: false
-  };
+const Message = props => {
+  const chatBox = useRef(null);
 
-  hideForm = () => {
-    const { oldScrollPoint } = this.state;
-    const newScrollPoint = window.pageYOffset;
+  const [message, setMessage] = useState("");
 
-    const formIsShown = oldScrollPoint < newScrollPoint;
-    console.log(oldScrollPoint, newScrollPoint, formIsShown);
-
-    this.setState({ oldScrollPoint: newScrollPoint, formIsShown });
-  };
-
-  componentDidMount() {
-    this.props.message.subscribeToMore({
+  useEffect(() => {
+    props.message.subscribeToMore({
       document: messageSubscription,
       variables: {
-        receiverMail: this.props.email
+        receiverMail: props.email
       },
       updateQuery: (prev, { subscriptionData }) => {
         if (!subscriptionData.data) return prev;
@@ -101,38 +89,21 @@ class Message extends Component {
         }
       }
     });
-    if (this.chatBox) {
-      this.scrollToBottom();
+    if (chatBox.current) {
+      scrollToBottom();
     }
-    //window.addEventListener("scroll", this.hideForm);
-  }
+  });
 
-  componentWillUnmount() {
-    window.removeEventListener("scroll", this.hideForm);
-  }
-
-  componentDidUpdate(prevState) {
-    if (this.state.message !== prevState.message) {
-      if (this.chatBox) {
-        this.scrollToBottom();
-      }
-    }
-  }
-
-  scrollToBottom = () => {
-    this.chatBox.scrollIntoView();
+  const scrollToBottom = () => {
+    chatBox.current.scrollIntoView();
   };
 
-  handleChange = ({ target: { name, value } }) => {
-    this.setState({ ...this.state, [name]: value });
-  };
-
-  handleSubmit = async (e, message, email) => {
-    this.setState({ message: "" });
+  const handleSubmit = async (e, message, email) => {
+    setMessage("");
     e.preventDefault();
-    const { receiverMail } = this.props;
+    const { receiverMail } = props;
     if (!message.length) return null;
-    await this.props.createMessage({
+    await props.createMessage({
       variables: {
         receiverMail: receiverMail,
         senderMail: email,
@@ -147,80 +118,55 @@ class Message extends Component {
     });
   };
 
-  render() {
-    const {
-      message: { error, loading, messages },
-      email,
-      receiverMail,
-      receiverName,
-      disabledEmail
-    } = this.props;
-    const { message } = this.state;
-    if (error || loading) return null;
+  const {
+    message: { error, loading, messages },
+    email,
+    receiverMail,
+    receiverName
+  } = props;
 
-    if (localStorage.token) {
-      return (
-        <div className="personalChat">
-          <div className="allMessages">
-            {messages.map(item =>
-              (item.senderMail === email &&
-                item.receiverMail === receiverMail) ||
-              (item.senderMail === receiverMail &&
-                item.receiverMail === email) ? (
-                <div
-                  key={item.id}
-                  className={item.users.map(a =>
-                    a.name === receiverName ? "receiver" : "sender"
-                  )}
-                >
-                  <div className="senderName">
-                    {item.users.map(x => x.name)}
-                  </div>
-                  {item.message}{" "}
-                  <span className="time">
-                    {" "}
-                    {moment(item.timestamp).fromNow()}
-                  </span>
-                </div>
-              ) : (
-                ""
-              )
-            )}
-          </div>
-          <div>
-            {disabledEmail && disabledEmail === receiverMail ? (
-              <div>User has left chat and can no longer reply you</div>
-            ) : null}
-          </div>
-          <form
-            onSubmit={e => this.handleSubmit(e, message, email)}
-            className={`chatBox ${
-              this.state.formIsShown ? "chatBox--hidden" : ""
-            }`}
-          >
-            <TextField
-              style={{ margin: 10 }}
-              placeholder={"Say something to " + receiverName}
-              fullWidth
-              name="message"
-              value={message}
-              onChange={this.handleChange}
-              margin="normal"
-              variant="outlined"
-            />
-          </form>
+  if (error || loading) return null;
 
-          <div
-            ref={chatBox => {
-              this.chatBox = chatBox;
-            }}
-          />
-        </div>
-      );
-    }
-    return null;
-  }
-}
+  return (
+    <div className="personalChat">
+      <div className="allMessages">
+        {messages.map(item =>
+          (item.senderMail === email && item.receiverMail === receiverMail) ||
+          (item.senderMail === receiverMail && item.receiverMail === email) ? (
+            <div
+              key={item.id}
+              className={item.users.map(a =>
+                a.name === receiverName ? "receiver" : "sender"
+              )}
+            >
+              <div className="senderName">{item.users.map(x => x.name)}</div>
+              {item.message}{" "}
+              <span className="time"> {moment(item.timestamp).fromNow()}</span>
+            </div>
+          ) : (
+            ""
+          )
+        )}
+      </div>
+      <form
+        onSubmit={e => handleSubmit(e, message, email)}
+        ref={chatBox}
+        className="chatBox"
+      >
+        <TextField
+          style={{ margin: 10 }}
+          placeholder={"Say something to " + receiverName}
+          fullWidth
+          name="message"
+          value={message}
+          onChange={e => setMessage(e.target.value)}
+          margin="normal"
+          variant="outlined"
+        />
+      </form>
+    </div>
+  );
+};
 
 export default compose(
   graphql(MessageQuery, { name: "message" }),

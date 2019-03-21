@@ -6,8 +6,11 @@ import validator from "validator";
 
 const Registration = props => {
   const [token, setToken] = useState({ name: "", email: "" });
-  //const [emailState, setEmail] = useState("")
   const [error, setError] = useState("");
+
+  const handleChange = e => {
+    setToken({ ...token, [e.target.name]: e.target.value });
+  };
 
   const validate = () => {
     const { name, email } = token;
@@ -17,20 +20,20 @@ const Registration = props => {
     });
 
     if (!name.length) {
-      setError({ error: "Name is required" });
+      setError("Name is required");
     }
 
     if (!validator.isEmail(email)) {
-      setError({ error: "Valid email is required" });
+      setError("Valid email is required");
     }
 
     if (existingUser) {
-      setError({ error: "Email already in use" });
+      setError("Email already in use");
     }
 
     if (name.length && validator.isEmail(email) && !existingUser) {
       window.location.reload();
-      setError({ error: "" });
+      setError("");
       props.createUser(email, name);
       localStorage["token"] = JSON.stringify(token);
     }
@@ -46,11 +49,7 @@ const Registration = props => {
         label="Name"
         name="name"
         value={name}
-        onChange={e =>
-          setToken(tokenState => {
-            return { ...tokenState, name: e.target.value };
-          })
-        }
+        onChange={handleChange}
         variant="outlined"
         style={{ margin: 10 }}
       />
@@ -61,11 +60,7 @@ const Registration = props => {
         label="Email"
         name="email"
         value={email}
-        onChange={e =>
-          setToken(tokenState => {
-            return { ...tokenState, email: e.target.value };
-          })
-        }
+        onChange={handleChange}
         variant="outlined"
         className="textArea"
         style={{ margin: 10 }}

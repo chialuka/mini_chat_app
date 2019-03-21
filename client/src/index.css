@@ -13,10 +13,10 @@ code {
     monospace;
 }
 
-/* .chatPage {
+.chatPage {
   display: flex;
   flex-flow: row nowrap;
-} */
+}
 
 .userWelcome {
   width: 25%;
@@ -100,9 +100,6 @@ p {
   transition: bottom 0.5s
 }
 
-.chatBox--hidden {
-  display: none;
-}
 
 .senderName {
   font-weight: bold;
