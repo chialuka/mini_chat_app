@@ -32,7 +32,6 @@ const Registration = props => {
     }
 
     if (name.length && validator.isEmail(email) && !existingUser) {
-      window.location.reload();
       setError("");
       props.createUser(email, name);
       localStorage["token"] = JSON.stringify(token);

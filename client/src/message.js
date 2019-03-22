@@ -84,9 +84,8 @@ const Message = props => {
         const msg = subscriptionData.data.newMessage;
         if (prev.messages.find(x => x.id === msg.id)) {
           return prev;
-        } else {
-          return { ...prev, messages: [...prev.messages, msg] };
         }
+        return { ...prev, messages: [...prev.messages, msg] };
       }
     });
     if (chatBox.current) {
@@ -122,7 +121,8 @@ const Message = props => {
     message: { error, loading, messages },
     email,
     receiverMail,
-    receiverName
+    receiverName,
+    userLeft
   } = props;
 
   if (error || loading) return null;
@@ -136,7 +136,7 @@ const Message = props => {
             <div
               key={item.id}
               className={item.users.map(a =>
-                a.name === receiverName ? "receiver" : "sender"
+                a.email === receiverMail ? "receiver" : "sender"
               )}
             >
               <div className="senderName">{item.users.map(x => x.name)}</div>
@@ -147,23 +147,32 @@ const Message = props => {
             ""
           )
         )}
+        {userLeft && userLeft === receiverMail ? (
+          <div>{receiverName} has left the chat. </div>
+        ) : null}
       </div>
-      <form
-        onSubmit={e => handleSubmit(e, message, email)}
-        ref={chatBox}
-        className="chatBox"
-      >
-        <TextField
-          style={{ margin: 10 }}
-          placeholder={"Say something to " + receiverName}
-          fullWidth
-          name="message"
-          value={message}
-          onChange={e => setMessage(e.target.value)}
-          margin="normal"
-          variant="outlined"
-        />
-      </form>
+      {receiverMail && receiverName && !userLeft? (
+        <form
+          onSubmit={e => handleSubmit(e, message, email)}
+          ref={chatBox}
+          className="chatBox"
+        >
+          <TextField
+            style={{ margin: 10 }}
+            placeholder={"Say something to " + receiverName}
+            fullWidth
+            name="message"
+            value={message}
+            onChange={e => setMessage(e.target.value)}
+            margin="normal"
+            variant="outlined"
+          />
+        </form>
+      ) : (
+        <div>
+          Select a logged in user from the left panel to start chatting
+        </div>
+      )}
     </div>
   );
 };

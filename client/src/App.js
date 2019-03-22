@@ -57,15 +57,24 @@ const addUserSubscription = gql`
   }
 `;
 
+const deleteUserSubscription = gql`
+  subscription {
+    oldUser
+  }
+`;
+
 const App = props => {
   const email =
     (localStorage.token && JSON.parse(localStorage.token).email) || "";
   const name =
     (localStorage.token && JSON.parse(localStorage.token).name) || "";
+
   const [receiverState, setReceiverState] = useState({
     receiverMail: "",
     receiverName: ""
   });
+
+  const [userLeft, setLeft] = useState("")
 
   const setSelectedMail = (mail, user) => {
     setReceiverState(receiverState => {
@@ -83,6 +92,20 @@ const App = props => {
         if (!prev.users.find(x => x.id === user.id)) {
           return { ...prev, users: [...prev.users, user] };
         }
+        return prev;
+      }
+    });
+    subscribeToMore({
+      document: deleteUserSubscription,
+      updateQuery: (prev, { subscriptionData }) => {
+        if (!subscriptionData.data) return prev;
+        const oldUser = subscriptionData.data.oldUser;
+        if (prev.users.some(x => x.email === oldUser)) {
+          const newUsers = prev.users.filter(x => x.email !== oldUser);
+          prev.users = newUsers;
+          return prev;
+        }
+        setLeft(oldUser)
         return prev;
       }
     });
@@ -105,6 +128,7 @@ const App = props => {
   };
 
   const deleteUser = async email => {
+    localStorage.removeItem("token");
     await props.deleteUser({
       variables: {
         email: email
@@ -113,7 +137,6 @@ const App = props => {
         const data = store.readQuery({ query: UserQuery });
         data.users = data.users.filter(x => x.email !== email);
         store.writeQuery({ query: UserQuery, data });
-        localStorage.removeItem("token");
       }
     });
   };
@@ -138,6 +161,7 @@ const App = props => {
           email={email}
           receiverMail={receiverMail}
           receiverName={receiverName}
+          userLeft={userLeft}
         />
       </div>
     );
