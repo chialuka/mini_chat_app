@@ -127,3 +127,9 @@ p {
   font-style: italic;
   color: rgba(24, 75, 216, 0.9)
 }
+
+.userTyping  {
+  position: fixed;
+  background-color: yellow;
+  width: 100%;
+}

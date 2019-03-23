@@ -98,9 +98,9 @@ const Message = props => {
     });
     props.message.subscribeToMore({
       document: userTypingSubscription,
-      variables: {
-        email: props.email
-      },
+      // variables: {
+      //   email: props.email
+      // },
       updateQuery: (prev, { subscriptionData }) => {
         if (!subscriptionData.data) return prev;
         const user = subscriptionData.data.userTyping;
@@ -118,10 +118,17 @@ const Message = props => {
 
   const handleChange = async e => {
     setMessage(e.target.value);
-    const { email } = props;
+    const { email, receiverMail } = props;
     await props.userTyping({
-      email: email
+      email
     });
+    const changeMail = async () => {
+      await props.userTyping({
+        email: receiverMail
+      });
+      console.log(receiverMail);
+    };
+    setTimeout(changeMail, 2000);
   };
 
   const handleSubmit = async (e, message, email) => {
@@ -142,6 +149,7 @@ const Message = props => {
         store.writeQuery({ query: MessageQuery, data });
       }
     });
+    setUser("");
   };
 
   const {
@@ -151,14 +159,17 @@ const Message = props => {
     receiverName,
     userLeft
   } = props;
+  console.log(userTyping);
 
   if (error || loading) return null;
 
   return (
     <div className="personalChat">
-      {userTyping && userTyping === receiverMail ? (
-        <div> {receiverName} is typing </div>
-      ) : null}
+      <div className="userTyping">
+        {userTyping && userTyping === receiverMail
+          ? `${receiverName} is typing`
+          : receiverName}
+      </div>
       <div className="allMessages">
         {messages.map(item =>
           (item.senderMail === email && item.receiverMail === receiverMail) ||
