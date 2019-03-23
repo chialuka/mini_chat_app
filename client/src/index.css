@@ -1,6 +1,5 @@
 body {
-  margin: 10px;
-  padding: 10px;
+  padding: 0px;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
     "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
     sans-serif;
@@ -25,10 +24,11 @@ code {
   flex-direction: column;
   border-right: 2px solid rgba(70, 70, 70, 0.5);
   position: fixed;
+  height: 100%
 }
 
 .selectUser {
-  background-color: rgb(10, 50, 68);
+  background-color: rgb(63, 206, 216);
   color: white;
   font-weight: bold;
 }
@@ -42,40 +42,31 @@ p {
   width: 70%;
   margin-left: 400px;
   float: right;
-  /* display: flex;
-  flex-direction: column; */
+  display: flex;
+  flex-direction: column;
   min-height: 100%;
   position: relative
 }
 
 .allMessages {
   padding-bottom: 100px;
-  /* position: absolute;
-  bottom: 0; */
-  /* display: flex;
-  flex-direction: column;
-  justify-content: flex-end; */
 }
 
 .sender {
-  /* background-color: rgb(192, 188, 188); */
+  background: linear-gradient(90deg, white 48%, #e0ece5 50%);
   display: flex;
   flex-direction: column;
   align-items: flex-end;
   margin: 5px;
-  /* float: right;
-  width: 440px; */
   padding: 5px;
 }
 
 .receiver {
-  /* background-color: rgb(194, 189, 189); */
+  background:linear-gradient(270deg, white 48%, #cfdddc 50%);
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   margin: 5px;
-  /* float: left;
-  width: 440px; */
   padding: 5px;
 }
 
@@ -91,7 +82,7 @@ p {
 }
 
 .chatBox {
-  border: 10px;
+  /* border: 10px; */
   bottom: 0;
   justify-content: center;
   position: absolute;

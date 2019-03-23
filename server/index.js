@@ -52,6 +52,7 @@ const typeDefs = `
     createUser(name: String! email: String!): User!
     updateUser(id: ID! name: String!): User!
     deleteUser(email: String!): Boolean!
+    userTyping(email: String!): Boolean!
 
     createMessage(senderMail: String! receiverMail: String! message: String! timestamp: Float!): Message!
     updateMessage(id: ID! message: String!): Message!
@@ -62,6 +63,7 @@ const typeDefs = `
     newMessage(receiverMail: String!): Message
     newUser: User
     oldUser: String
+    userTyping: String
   }
 `;
 
@@ -106,6 +108,12 @@ const resolvers = {
         Message.deleteMany({ senderMail: email })
       ]);
       pubsub.publish("oldUser", { oldUser: email });
+      return true;
+    },
+
+    userTyping: async (_, { email }) => {
+      await User.findOne({ email });
+      pubsub.publish("userTyping", { userTyping: email });
       return true;
     },
 
@@ -161,6 +169,12 @@ const resolvers = {
     oldUser: {
       subscribe: (_, {}, { pubsub }) => {
         return pubsub.asyncIterator("oldUser");
+      }
+    },
+
+    userTyping: {
+      subscribe: (_, {}, { pubsub }) => {
+        return pubsub.asyncIterator("userTyping");
       }
     }
   }

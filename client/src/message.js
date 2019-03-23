@@ -46,9 +46,9 @@ const createMessageMutation = gql`
   }
 `;
 
-const deleteMessageMutation = gql`
-  mutation($id: ID!) {
-    deleteMessage(id: $id)
+const userTypingMutation = gql`
+  mutation($email: String!) {
+    userTyping(email: $email)
   }
 `;
 
@@ -68,10 +68,18 @@ const messageSubscription = gql`
   }
 `;
 
+const userTypingSubscription = gql`
+  subscription {
+    userTyping
+  }
+`;
+
 const Message = props => {
   const chatBox = useRef(null);
 
   const [message, setMessage] = useState("");
+
+  const [userTyping, setUser] = useState("");
 
   useEffect(() => {
     props.message.subscribeToMore({
@@ -88,6 +96,17 @@ const Message = props => {
         return { ...prev, messages: [...prev.messages, msg] };
       }
     });
+    props.message.subscribeToMore({
+      document: userTypingSubscription,
+      variables: {
+        email: props.email
+      },
+      updateQuery: (prev, { subscriptionData }) => {
+        if (!subscriptionData.data) return prev;
+        const user = subscriptionData.data.userTyping;
+        setUser(user);
+      }
+    });
     if (chatBox.current) {
       scrollToBottom();
     }
@@ -95,6 +114,14 @@ const Message = props => {
 
   const scrollToBottom = () => {
     chatBox.current.scrollIntoView();
+  };
+
+  const handleChange = async e => {
+    setMessage(e.target.value);
+    const { email } = props;
+    await props.userTyping({
+      email: email
+    });
   };
 
   const handleSubmit = async (e, message, email) => {
@@ -129,6 +156,9 @@ const Message = props => {
 
   return (
     <div className="personalChat">
+      {userTyping && userTyping === receiverMail ? (
+        <div> {receiverName} is typing </div>
+      ) : null}
       <div className="allMessages">
         {messages.map(item =>
           (item.senderMail === email && item.receiverMail === receiverMail) ||
@@ -151,7 +181,7 @@ const Message = props => {
           <div>{receiverName} has left the chat. </div>
         ) : null}
       </div>
-      {receiverMail && receiverName && !userLeft? (
+      {receiverMail && receiverName && !userLeft ? (
         <form
           onSubmit={e => handleSubmit(e, message, email)}
           ref={chatBox}
@@ -163,15 +193,13 @@ const Message = props => {
             fullWidth
             name="message"
             value={message}
-            onChange={e => setMessage(e.target.value)}
+            onChange={handleChange}
             margin="normal"
             variant="outlined"
           />
         </form>
       ) : (
-        <div>
-          Select a logged in user from the left panel to start chatting
-        </div>
+        <div>Select a logged in user from the left panel to start chatting</div>
       )}
     </div>
   );
@@ -180,5 +208,5 @@ const Message = props => {
 export default compose(
   graphql(MessageQuery, { name: "message" }),
   graphql(createMessageMutation, { name: "createMessage" }),
-  graphql(deleteMessageMutation, { name: "deleteMessage" })
+  graphql(userTypingMutation, { name: "userTyping" })
 )(Message);
