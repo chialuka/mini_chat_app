@@ -7,8 +7,9 @@ import { HttpLink } from 'apollo-link-http';
 import { WebSocketLink } from 'apollo-link-ws';
 import { getMainDefinition } from 'apollo-utilities';
 import { InMemoryCache } from 'apollo-cache-inmemory'
-import "./index.css";
 import App from "./App";
+
+import "./index.css";
 
 // Create an http link:
 const httpLink = new HttpLink({
