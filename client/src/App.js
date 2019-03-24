@@ -131,7 +131,7 @@ const App = props => {
     localStorage.removeItem("token");
     await props.deleteUser({
       variables: {
-        email: email
+        email
       },
       update: store => {
         const data = store.readQuery({ query: UserQuery });
@@ -162,6 +162,7 @@ const App = props => {
           receiverMail={receiverMail}
           receiverName={receiverName}
           userLeft={userLeft}
+          name={name}
         />
       </div>
     );

@@ -52,7 +52,7 @@ const typeDefs = `
     createUser(name: String! email: String!): User!
     updateUser(id: ID! name: String!): User!
     deleteUser(email: String!): Boolean!
-    userTyping(email: String!): Boolean!
+    userTyping(email: String): Boolean!
 
     createMessage(senderMail: String! receiverMail: String! message: String! timestamp: Float!): Message!
     updateMessage(id: ID! message: String!): Message!
@@ -111,10 +111,8 @@ const resolvers = {
       return true;
     },
 
-    userTyping: async (_, { email }) => {
-      await User.findOne({ email });
+    userTyping: (_, { email }) => {
       pubsub.publish("userTyping", { userTyping: email });
-      console.log(email)
       return true;
     },
 
