@@ -111,10 +111,8 @@ const resolvers = {
       return true;
     },
 
-    userTyping: async (_, { email }) => {
-      await User.findOne({ email });
+    userTyping: (_, { email }) => {
       pubsub.publish("userTyping", { userTyping: email });
-      console.log(email)
       return true;
     },
 

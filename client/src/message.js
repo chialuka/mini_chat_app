@@ -4,8 +4,8 @@ import { graphql, compose } from "react-apollo";
 import TextField from "@material-ui/core/TextField";
 import moment from "moment";
 
-const MessageQuery = gql`
-  {
+const messageQuery = gql`
+  query {
     messages {
       id
       message
@@ -68,7 +68,7 @@ const MessageSubscription = gql`
   }
 `;
 
-const userTypingSubscription = gql`
+const UserTypingSubscription = gql`
   subscription {
     userTyping
   }
@@ -80,6 +80,8 @@ const Message = props => {
   const [message, setMessage] = useState("");
 
   const [userTyping, setUser] = useState("");
+
+  const [timer, setTimer] = useState(null)
 
   useEffect(() => {
     props.message.subscribeToMore({
@@ -97,7 +99,7 @@ const Message = props => {
       }
     });
     props.message.subscribeToMore({
-      document: userTypingSubscription,
+      document: UserTypingSubscription,
       updateQuery: (prev, { subscriptionData }) => {
         if (!subscriptionData.data) return prev;
         const user = subscriptionData.data.userTyping;
@@ -115,15 +117,21 @@ const Message = props => {
 
   const handleChange = async e => {
     setMessage(e.target.value);
-    const { email, receiverMail } = props;
-    await props.userTyping({ email });
+    const { email } = props;
+    await props.userTyping({
+      variables: {
+        email
+      }
+    });
     const changeMail = async () => {
       await props.userTyping({
-        email: receiverMail
+        variables: {
+          email: "email"
+        }
       });
-      console.log(receiverMail);
     };
-    setTimeout(changeMail, 2000);
+    clearTimeout(timer);
+    setTimer(setTimeout(changeMail, 2000))
   };
 
   const handleSubmit = async (e, message, email) => {
@@ -139,12 +147,16 @@ const Message = props => {
         timestamp: Date.now()
       },
       update: (store, { data: { createMessage } }) => {
-        const data = store.readQuery({ query: MessageQuery });
+        const data = store.readQuery({ query: messageQuery });
         data.messages.push(createMessage);
-        store.writeQuery({ query: MessageQuery, data });
+        store.writeQuery({ query: messageQuery, data });
       }
     });
-    setUser("");
+    await props.userTyping({
+      variables: {
+        email: "email"
+      }
+    });
   };
 
   const {
@@ -154,7 +166,6 @@ const Message = props => {
     receiverName,
     userLeft
   } = props;
-  console.log(userTyping);
 
   if (error || loading) return null;
 

@@ -6,7 +6,7 @@ import gql from "graphql-tag";
 import { graphql, compose } from "react-apollo";
 
 const UserQuery = gql`
-  {
+  query {
     users {
       id
       name
@@ -35,7 +35,7 @@ const CreateUserMutation = gql`
   }
 `;
 
-const deleteUserMutation = gql`
+const DeleteUserMutation = gql`
   mutation($email: String!) {
     deleteUser(email: $email)
   }
@@ -160,6 +160,7 @@ const App = props => {
           receiverMail={receiverMail}
           receiverName={receiverName}
           userLeft={userLeft}
+          name={name}
         />
       </div>
     );
@@ -170,5 +171,5 @@ const App = props => {
 export default compose(
   graphql(UserQuery),
   graphql(CreateUserMutation, { name: "createUser" }),
-  graphql(deleteUserMutation, { name: "deleteUser" })
+  graphql(DeleteUserMutation, { name: "deleteUser" })
 )(App);
