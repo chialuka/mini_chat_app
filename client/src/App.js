@@ -41,7 +41,7 @@ const deleteUserMutation = gql`
   }
 `;
 
-const addUserSubscription = gql`
+const AddUserSubscription = gql`
   subscription {
     newUser {
       name
@@ -57,7 +57,7 @@ const addUserSubscription = gql`
   }
 `;
 
-const deleteUserSubscription = gql`
+const DeleteUserSubscription = gql`
   subscription {
     oldUser
   }
@@ -85,7 +85,7 @@ const App = props => {
   useEffect(() => {
     const subscribeToMore = props.data.subscribeToMore;
     subscribeToMore({
-      document: addUserSubscription,
+      document: AddUserSubscription,
       updateQuery: (prev, { subscriptionData }) => {
         if (!subscriptionData.data) return prev;
         const user = subscriptionData.data.newUser;
@@ -96,7 +96,7 @@ const App = props => {
       }
     });
     subscribeToMore({
-      document: deleteUserSubscription,
+      document: DeleteUserSubscription,
       updateQuery: (prev, { subscriptionData }) => {
         if (!subscriptionData.data) return prev;
         const oldUser = subscriptionData.data.oldUser;
@@ -109,13 +109,13 @@ const App = props => {
         return prev;
       }
     });
-  });
+  }, [props.data]);
 
   const createUser = async (email, name) => {
     await props.createUser({
       variables: {
-        email: email,
-        name: name
+        email,
+        name
       },
       update: (store, { data: { createUser } }) => {
         const data = store.readQuery({ query: UserQuery });
@@ -130,9 +130,7 @@ const App = props => {
   const deleteUser = async email => {
     localStorage.removeItem("token");
     await props.deleteUser({
-      variables: {
-        email: email
-      },
+      variables: { email },
       update: store => {
         const data = store.readQuery({ query: UserQuery });
         data.users = data.users.filter(x => x.email !== email);
@@ -147,7 +145,7 @@ const App = props => {
   } = props;
 
   if (loading || error) return null;
-  if (localStorage.token) {
+  if (localStorage.getItem('token')) {
     return (
       <div className="chatPage">
         <User

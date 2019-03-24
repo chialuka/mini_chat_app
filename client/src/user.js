@@ -5,19 +5,19 @@ const User = props => {
 
   const selectUser = useCallback((mail, user) => {
     props.selectedMail(mail, user);
-  });
+  }, [mail, user]);
 
   const deleteUser = useCallback(() => {
     props.deleteUser(email);
-  });
+  }, [email]);
 
   return (
-    <div className="userWelcome">
+    <div className="user-welcome">
       <div className="leave" onClick={deleteUser}>
         Leave Chat?
       </div>
       <p>Hello, {name}</p>
-      <div className="selectUser">
+      <div className="select-user">
         {users.map(item =>
           item.email !== email ? (
             <div

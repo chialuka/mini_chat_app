@@ -12,12 +12,12 @@ code {
     monospace;
 }
 
-.chatPage {
+.chat-page {
   display: flex;
   flex-flow: row nowrap;
 }
 
-.userWelcome {
+.user-welcome {
   width: 25%;
   margin: 10px 0px 0px 10px;
   display: flex;
@@ -27,7 +27,7 @@ code {
   height: 100%
 }
 
-.selectUser {
+.select-user {
   background-color: rgb(63, 206, 216);
   color: white;
   font-weight: bold;
@@ -38,7 +38,7 @@ p {
   font-size: 20px;
 }
 
-.personalChat {
+.personal-chat {
   width: 70%;
   margin-left: 400px;
   float: right;
@@ -48,7 +48,7 @@ p {
   position: relative
 }
 
-.allMessages {
+.all-messages {
   padding-bottom: 100px;
 }
 
@@ -81,8 +81,7 @@ p {
   color: black;
 }
 
-.chatBox {
-  /* border: 10px; */
+.chat-box {
   bottom: 0;
   justify-content: center;
   position: absolute;
@@ -92,7 +91,7 @@ p {
 }
 
 
-.senderName {
+.sender-name {
   font-weight: bold;
   font-family:  "Book Antiqua";
 }
@@ -128,7 +127,7 @@ p {
   color: rgba(24, 75, 216, 0.9)
 }
 
-.userTyping  {
+.user-typing  {
   position: fixed;
   background-color: yellow;
   width: 100%;
