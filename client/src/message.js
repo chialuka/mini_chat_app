@@ -4,7 +4,7 @@ import { graphql, compose } from "react-apollo";
 import TextField from "@material-ui/core/TextField";
 import moment from "moment";
 
-const messageQuery = gql`
+const MessageQuery = gql`
   query {
     messages {
       id
@@ -147,9 +147,9 @@ const Message = props => {
         timestamp: Date.now()
       },
       update: (store, { data: { createMessage } }) => {
-        const data = store.readQuery({ query: messageQuery });
+        const data = store.readQuery({ query: MessageQuery });
         data.messages.push(createMessage);
-        store.writeQuery({ query: messageQuery, data });
+        store.writeQuery({ query: MessageQuery, data });
       }
     });
     await props.userTyping({

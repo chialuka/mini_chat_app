@@ -64,17 +64,14 @@ const DeleteUserSubscription = gql`
 `;
 
 const App = props => {
-  const email =
-    (localStorage.token && JSON.parse(localStorage.token).email) || "";
-  const name =
-    (localStorage.token && JSON.parse(localStorage.token).name) || "";
+  const user  = localStorage.getItem('token') && (JSON.parse(localStorage.getItem('token')) || {})
 
   const [receiverState, setReceiverState] = useState({
     receiverMail: "",
     receiverName: ""
   });
 
-  const [userLeft, setLeft] = useState("")
+  const [userLeft, setUserLeft] = useState("")
 
   const setSelectedMail = (mail, user) => {
     setReceiverState(receiverState => {
@@ -105,7 +102,7 @@ const App = props => {
           prev.users = newUsers;
           return prev;
         }
-        setLeft(oldUser)
+        setUserLeft(oldUser)
         return prev;
       }
     });
@@ -147,20 +144,20 @@ const App = props => {
   if (loading || error) return null;
   if (localStorage.getItem('token')) {
     return (
-      <div className="chatPage">
+      <div className="chat-page">
         <User
           users={users}
-          email={email}
-          name={name}
+          email={user.email}
+          name={user.name}
           selectedMail={setSelectedMail}
           deleteUser={deleteUser}
         />
         <Message
-          email={email}
+          email={user.email}
           receiverMail={receiverMail}
           receiverName={receiverName}
           userLeft={userLeft}
-          name={name}
+          name={user.name}
         />
       </div>
     );

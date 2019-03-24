@@ -5,11 +5,11 @@ const User = props => {
 
   const selectUser = useCallback((mail, user) => {
     props.selectedMail(mail, user);
-  }, [mail, user]);
+  });
 
   const deleteUser = useCallback(() => {
     props.deleteUser(email);
-  }, [email]);
+  });
 
   return (
     <div className="user-welcome">
