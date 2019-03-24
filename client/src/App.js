@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import User from "./user";
-import Message from "./message";
-import Registration from "./frontPage";
+import User from "./User";
+import Message from "./Message";
+import Registration from "./FrontPage";
 import gql from "graphql-tag";
 import { graphql, compose } from "react-apollo";
 
