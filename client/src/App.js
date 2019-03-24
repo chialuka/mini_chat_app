@@ -6,7 +6,7 @@ import gql from "graphql-tag";
 import { graphql, compose } from "react-apollo";
 
 const UserQuery = gql`
-  {
+  query {
     users {
       id
       name
@@ -35,13 +35,13 @@ const CreateUserMutation = gql`
   }
 `;
 
-const deleteUserMutation = gql`
+const DeleteUserMutation = gql`
   mutation($email: String!) {
     deleteUser(email: $email)
   }
 `;
 
-const addUserSubscription = gql`
+const AddUserSubscription = gql`
   subscription {
     newUser {
       name
@@ -57,24 +57,21 @@ const addUserSubscription = gql`
   }
 `;
 
-const deleteUserSubscription = gql`
+const DeleteUserSubscription = gql`
   subscription {
     oldUser
   }
 `;
 
 const App = props => {
-  const email =
-    (localStorage.token && JSON.parse(localStorage.token).email) || "";
-  const name =
-    (localStorage.token && JSON.parse(localStorage.token).name) || "";
+  const user  = localStorage.getItem('token') && (JSON.parse(localStorage.getItem('token')) || {})
 
   const [receiverState, setReceiverState] = useState({
     receiverMail: "",
     receiverName: ""
   });
 
-  const [userLeft, setLeft] = useState("")
+  const [userLeft, setUserLeft] = useState("")
 
   const setSelectedMail = (mail, user) => {
     setReceiverState(receiverState => {
@@ -85,7 +82,7 @@ const App = props => {
   useEffect(() => {
     const subscribeToMore = props.data.subscribeToMore;
     subscribeToMore({
-      document: addUserSubscription,
+      document: AddUserSubscription,
       updateQuery: (prev, { subscriptionData }) => {
         if (!subscriptionData.data) return prev;
         const user = subscriptionData.data.newUser;
@@ -96,7 +93,7 @@ const App = props => {
       }
     });
     subscribeToMore({
-      document: deleteUserSubscription,
+      document: DeleteUserSubscription,
       updateQuery: (prev, { subscriptionData }) => {
         if (!subscriptionData.data) return prev;
         const oldUser = subscriptionData.data.oldUser;
@@ -105,17 +102,17 @@ const App = props => {
           prev.users = newUsers;
           return prev;
         }
-        setLeft(oldUser)
+        setUserLeft(oldUser)
         return prev;
       }
     });
-  });
+  }, [props.data]);
 
   const createUser = async (email, name) => {
     await props.createUser({
       variables: {
-        email: email,
-        name: name
+        email,
+        name
       },
       update: (store, { data: { createUser } }) => {
         const data = store.readQuery({ query: UserQuery });
@@ -130,9 +127,7 @@ const App = props => {
   const deleteUser = async email => {
     localStorage.removeItem("token");
     await props.deleteUser({
-      variables: {
-        email
-      },
+      variables: { email },
       update: store => {
         const data = store.readQuery({ query: UserQuery });
         data.users = data.users.filter(x => x.email !== email);
@@ -147,22 +142,22 @@ const App = props => {
   } = props;
 
   if (loading || error) return null;
-  if (localStorage.token) {
+  if (localStorage.getItem('token')) {
     return (
-      <div className="chatPage">
+      <div className="chat-page">
         <User
           users={users}
-          email={email}
-          name={name}
+          email={user.email}
+          name={user.name}
           selectedMail={setSelectedMail}
           deleteUser={deleteUser}
         />
         <Message
-          email={email}
+          email={user.email}
           receiverMail={receiverMail}
           receiverName={receiverName}
           userLeft={userLeft}
-          name={name}
+          name={user.name}
         />
       </div>
     );
@@ -173,5 +168,5 @@ const App = props => {
 export default compose(
   graphql(UserQuery),
   graphql(CreateUserMutation, { name: "createUser" }),
-  graphql(deleteUserMutation, { name: "deleteUser" })
+  graphql(DeleteUserMutation, { name: "deleteUser" })
 )(App);

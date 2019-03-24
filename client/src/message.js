@@ -4,8 +4,8 @@ import { graphql, compose } from "react-apollo";
 import TextField from "@material-ui/core/TextField";
 import moment from "moment";
 
-const messageQuery = gql`
-  {
+const MessageQuery = gql`
+  query {
     messages {
       id
       message
@@ -20,7 +20,7 @@ const messageQuery = gql`
   }
 `;
 
-const createMessageMutation = gql`
+const CreateMessageMutation = gql`
   mutation(
     $message: String!
     $senderMail: String!
@@ -46,13 +46,13 @@ const createMessageMutation = gql`
   }
 `;
 
-const userTypingMutation = gql`
-  mutation($email: String) {
+const UserTypingMutation = gql`
+  mutation($email: String!) {
     userTyping(email: $email)
   }
 `;
 
-const messageSubscription = gql`
+const MessageSubscription = gql`
   subscription($receiverMail: String!) {
     newMessage(receiverMail: $receiverMail) {
       message
@@ -68,7 +68,7 @@ const messageSubscription = gql`
   }
 `;
 
-const userTypingSubscription = gql`
+const UserTypingSubscription = gql`
   subscription {
     userTyping
   }
@@ -85,7 +85,7 @@ const Message = props => {
 
   useEffect(() => {
     props.message.subscribeToMore({
-      document: messageSubscription,
+      document: MessageSubscription,
       variables: {
         receiverMail: props.email
       },
@@ -99,7 +99,7 @@ const Message = props => {
       }
     });
     props.message.subscribeToMore({
-      document: userTypingSubscription,
+      document: UserTypingSubscription,
       updateQuery: (prev, { subscriptionData }) => {
         if (!subscriptionData.data) return prev;
         const user = subscriptionData.data.userTyping;
@@ -147,9 +147,9 @@ const Message = props => {
         timestamp: Date.now()
       },
       update: (store, { data: { createMessage } }) => {
-        const data = store.readQuery({ query: messageQuery });
+        const data = store.readQuery({ query: MessageQuery });
         data.messages.push(createMessage);
-        store.writeQuery({ query: messageQuery, data });
+        store.writeQuery({ query: MessageQuery, data });
       }
     });
     await props.userTyping({
@@ -170,13 +170,13 @@ const Message = props => {
   if (error || loading) return null;
 
   return (
-    <div className="personalChat">
-      <div className="userTyping">
+    <div className="personal-chat">
+      <div className="user-typing">
         {userTyping && userTyping === receiverMail
           ? `${receiverName} is typing`
           : receiverName}
       </div>
-      <div className="allMessages">
+      <div className="all-messages">
         {messages.map(item =>
           (item.senderMail === email && item.receiverMail === receiverMail) ||
           (item.senderMail === receiverMail && item.receiverMail === email) ? (
@@ -186,7 +186,7 @@ const Message = props => {
                 a.email === receiverMail ? "receiver" : "sender"
               )}
             >
-              <div className="senderName">{item.users.map(x => x.name)}</div>
+              <div className="sender-name">{item.users.map(x => x.name)}</div>
               {item.message}{" "}
               <span className="time"> {moment(item.timestamp).fromNow()}</span>
             </div>
@@ -202,7 +202,7 @@ const Message = props => {
         <form
           onSubmit={e => handleSubmit(e, message, email)}
           ref={chatBox}
-          className="chatBox"
+          className="chat-box"
         >
           <TextField
             style={{ margin: 10 }}
@@ -223,7 +223,7 @@ const Message = props => {
 };
 
 export default compose(
-  graphql(messageQuery, { name: "message" }),
-  graphql(createMessageMutation, { name: "createMessage" }),
-  graphql(userTypingMutation, { name: "userTyping" })
+  graphql(MessageQuery, { name: "message" }),
+  graphql(CreateMessageMutation, { name: "createMessage" }),
+  graphql(UserTypingMutation, { name: "userTyping" })
 )(Message);

@@ -12,12 +12,12 @@ const User = props => {
   });
 
   return (
-    <div className="userWelcome">
+    <div className="user-welcome">
       <div className="leave" onClick={deleteUser}>
         Leave Chat?
       </div>
       <p>Hello, {name}</p>
-      <div className="selectUser">
+      <div className="select-user">
         {users.map(item =>
           item.email !== email ? (
             <div
