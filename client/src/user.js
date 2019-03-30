@@ -1,4 +1,5 @@
 import React, { useCallback } from "react";
+import Button from "@material-ui/core/Button";
 
 const User = props => {
   const { users, email, name } = props;
@@ -12,11 +13,18 @@ const User = props => {
   });
 
   return (
-    <div className="user-welcome">
-      <div className="leave" onClick={deleteUser}>
-        Leave Chat?
-      </div>
+    <div className="user-welcome" style={props.style}>
+      <div className="user-heading">
       <p>Hello, {name}</p>
+        <Button
+          className="leave"
+          size="small"
+          variant="outlined"
+          onClick={deleteUser}
+        >
+          Leave Chat?
+        </Button>
+      </div>
       <div className="select-user">
         {users.map(item =>
           item.email !== email ? (

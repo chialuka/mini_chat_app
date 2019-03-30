@@ -83,6 +83,10 @@ const Message = props => {
 
   const [timer, setTimer] = useState(null);
 
+  const handleShow = () => {
+    props.setStyle()
+  }
+
   useEffect(() => {
     props.message.subscribeToMore({
       document: MessageSubscription,
@@ -176,11 +180,18 @@ const Message = props => {
   if (error || loading) return null;
 
   return (
-    <div className="personal-chat">
-      <div className="user-typing">
-        {userTyping && userTyping === receiverMail
-          ? `${receiverName} is typing`
-          : receiverName}
+    <div className="personal-chat" style={props.style}>
+      <div className="chats-header">
+        <div className="back-button" onClick={handleShow}>
+          <div className="bar1" />
+          <div className="bar2" />
+          <div className="bar3" />
+        </div>
+        <div className="user-typing">
+          {userTyping && userTyping === receiverMail
+            ? `${receiverName} is typing`
+            : receiverName}
+        </div>
       </div>
       <div className="all-messages">
         {messages.map(item =>

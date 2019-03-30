@@ -61,7 +61,7 @@ const Registration = props => {
         value={email}
         onChange={handleChange}
         variant="outlined"
-        className="textArea"
+        className="text-area"
         style={{ margin: 10 }}
       />
       <Button variant="contained" onClick={validate} style={{ margin: 15 }}>

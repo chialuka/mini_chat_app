@@ -76,11 +76,18 @@ const App = props => {
 
   const [userLeft, setUserLeft] = useState("");
 
+  const [hidden, setHidden] = useState(false);
+
   const setSelectedMail = (mail, user) => {
     setReceiverState(receiverState => {
       return { ...receiverState, receiverMail: mail, receiverName: user };
     });
+    setHidden(!hidden);
   };
+
+  const setStyle = () => {
+    setHidden(!hidden);
+  }
 
   useEffect(() => {
     const subscribeToMore = props.data.subscribeToMore;
@@ -149,6 +156,7 @@ const App = props => {
     return (
       <div className="chat-page">
         <User
+          style={{ display: hidden ? "none" : "block" }}
           users={users}
           email={user.email}
           name={user.name}
@@ -156,11 +164,13 @@ const App = props => {
           deleteUser={deleteUser}
         />
         <Message
+          style={{ display: hidden ? "block" : "none" }}
           email={user.email}
           receiverMail={receiverMail}
           receiverName={receiverName}
           userLeft={userLeft}
           name={user.name}
+          setStyle={setStyle}
         />
       </div>
     );
