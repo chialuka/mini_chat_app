@@ -47,8 +47,8 @@ const CreateMessageMutation = gql`
 `;
 
 const UserTypingMutation = gql`
-  mutation($email: String!) {
-    userTyping(email: $email)
+  mutation($email: String! $receiverMail: String!) {
+    userTyping(email: $email receiverMail: $receiverMail)
   }
 `;
 
@@ -69,8 +69,8 @@ const MessageSubscription = gql`
 `;
 
 const UserTypingSubscription = gql`
-  subscription {
-    userTyping
+  subscription ($receiverMail: String!) {
+    userTyping (receiverMail: $receiverMail)
   }
 `;
 
@@ -100,6 +100,9 @@ const Message = props => {
     });
     props.message.subscribeToMore({
       document: UserTypingSubscription,
+      variables: {
+        receiverMail: props.email
+      },
       updateQuery: (prev, { subscriptionData }) => {
         if (!subscriptionData.data) return prev;
         const user = subscriptionData.data.userTyping;
@@ -117,16 +120,17 @@ const Message = props => {
 
   const handleChange = async e => {
     setMessage(e.target.value);
-    const { email } = props;
+    const { email, receiverMail } = props;
     await props.userTyping({
       variables: {
-        email
+        email,
+        receiverMail
       }
     });
     const changeMail = async () => {
       await props.userTyping({
         variables: {
-          email: "email"
+          email: "email",
         }
       });
     };

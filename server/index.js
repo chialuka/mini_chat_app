@@ -52,7 +52,7 @@ const typeDefs = `
     createUser(name: String! email: String!): User!
     updateUser(id: ID! name: String!): User!
     deleteUser(email: String!): Boolean!
-    userTyping(email: String!): Boolean!
+    userTyping(email: String! receiverMail: String!): Boolean!
 
     createMessage(senderMail: String! receiverMail: String! message: String! timestamp: Float!): Message!
     updateMessage(id: ID! message: String!): Message!
@@ -63,7 +63,7 @@ const typeDefs = `
     newMessage(receiverMail: String!): Message
     newUser: User
     oldUser: String
-    userTyping: String
+    userTyping (receiverMail: String!): String
   }
 `;
 
@@ -111,8 +111,8 @@ const resolvers = {
       return true;
     },
 
-    userTyping: (_, { email }) => {
-      pubsub.publish("userTyping", { userTyping: email });
+    userTyping: (_, { email, receiverMail }) => {
+      pubsub.publish("userTyping", { userTyping: email, receiverMail });
       return true;
     },
 
@@ -129,7 +129,7 @@ const resolvers = {
       await userText.save();
       pubsub.publish("newMessage", {
         newMessage: userText,
-        receiverMail: receiverMail
+        receiverMail
       });
       return userText;
     },
@@ -172,9 +172,12 @@ const resolvers = {
     },
 
     userTyping: {
-      subscribe: (_, {}, { pubsub }) => {
-        return pubsub.asyncIterator("userTyping");
-      }
+      subscribe: withFilter(
+        () => pubsub.asyncIterator("userTyping"),
+        (payload, variables) => {
+          return payload.receiverMail === variables.receiverMail;
+        }
+      )
     }
   }
 };
