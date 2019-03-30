@@ -64,14 +64,17 @@ const DeleteUserSubscription = gql`
 `;
 
 const App = props => {
-  const user  = localStorage.getItem('token') && (JSON.parse(localStorage.getItem('token')) || {})
+  const user =
+    (localStorage.getItem("token") &&
+      JSON.parse(localStorage.getItem("token"))) ||
+    {};
 
   const [receiverState, setReceiverState] = useState({
     receiverMail: "",
     receiverName: ""
   });
 
-  const [userLeft, setUserLeft] = useState("")
+  const [userLeft, setUserLeft] = useState("");
 
   const setSelectedMail = (mail, user) => {
     setReceiverState(receiverState => {
@@ -102,7 +105,7 @@ const App = props => {
           prev.users = newUsers;
           return prev;
         }
-        setUserLeft(oldUser)
+        setUserLeft(oldUser);
         return prev;
       }
     });
@@ -142,7 +145,7 @@ const App = props => {
   } = props;
 
   if (loading || error) return null;
-  if (localStorage.getItem('token')) {
+  if (localStorage.getItem("token")) {
     return (
       <div className="chat-page">
         <User
