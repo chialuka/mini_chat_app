@@ -35,7 +35,6 @@ body {
 
 p {
   font-weight: bold;
-  /* font-size: 20px; */
 }
 
 .personal-chat {
@@ -48,6 +47,7 @@ p {
   position: fixed;
   display: flex;
   background-color: #2196f3;
+  top: 0;
 }
 
 .back-button {
@@ -69,21 +69,25 @@ p {
 }
 
 .sender {
-  background: linear-gradient(90deg, white 48%, #eceaea 50%);
+  border: 2px solid #dedede;
+  border-radius: 4px;
+  background: linear-gradient(90deg, white 49%, #f1f1f1 50%);
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  margin: 3px;
-  padding: 5px;
+  margin: 5px;
+  padding: 10px;
 }
 
 .receiver {
-  background:linear-gradient(270deg, white 48%, #f1f0f0 50%);
+  border-color: #ccc;
+  border-radius: 4px;
+  background: linear-gradient(-90deg, white 49%, #ddd 50%);
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  margin: 3px;
-  padding: 5px;
+  margin: 5px;
+  padding: 10px;
 }
 
 .users {
@@ -98,9 +102,15 @@ p {
   color: black;
 }
 
+.select-message {
+  text-align: center;
+  font-weight: bold;
+}
+
 .chat-box {
   bottom: 0;
-  justify-content: center;
+  display: flex;
+  align-items: center;
   width: 100%;
 }
 

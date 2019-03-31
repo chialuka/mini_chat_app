@@ -233,7 +233,7 @@ const Message = props => {
           />
         </form>
       ) : (
-        <div>Select a logged in user from the left panel to start chatting</div>
+        <div className="select-message">Select a logged in user from the left panel</div>
       )}
     </div>
   );
