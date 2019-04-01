@@ -13,12 +13,12 @@ import "./index.css";
 
 // Create an http link:
 const httpLink = new HttpLink({
-  uri: 'http://localhost:4000/'
+  uri: 'https://server.lukaschiama.now.sh/'
 });
 
 // Create a WebSocket link:
 const wsLink = new WebSocketLink({
-  uri: `ws://localhost:4000/`,
+  uri: `wss://server.lukaschiama.now.sh/`,
   options: {
     reconnect: true
   }

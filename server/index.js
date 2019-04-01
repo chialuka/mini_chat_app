@@ -1,7 +1,7 @@
 const { PubSub, withFilter, GraphQLServer } = require("graphql-yoga");
 const mongoose = require("mongoose");
 
-mongoose.connect("mongodb://localhost/miniChat", {
+mongoose.connect("mongodb://chat_app:AD33Calvary@ds229186.mlab.com:29186/chat_app", {
   useNewUrlParser: true,
   useFindAndModify: false,
   useCreateIndex: true
