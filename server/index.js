@@ -1,7 +1,12 @@
 const { PubSub, withFilter, GraphQLServer } = require("graphql-yoga");
 const mongoose = require("mongoose");
+const dotenv = require("dotenv");
 
-mongoose.connect("mongodb://chat_app:AD33Calvary@ds229186.mlab.com:29186/chat_app", {
+dotenv.config();
+
+const { DB_URL } = process.env;
+
+mongoose.connect(DB_URL, {
   useNewUrlParser: true,
   useFindAndModify: false,
   useCreateIndex: true
@@ -185,5 +190,10 @@ const resolvers = {
 const pubsub = new PubSub();
 const server = new GraphQLServer({ typeDefs, resolvers, context: { pubsub } });
 mongoose.connection.once("open", () =>
-  server.start(() => console.log("We make magic over at localhost:4000"))
+  server.start({
+    cors: {
+      credentials: true,
+      origin: ["http://localhost:3000", "https://my-chat-app.lukaschiama.now.sh/"]
+    }
+  },() => console.log("We make magic over at localhost:4000"))
 );

@@ -7,9 +7,10 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon index.js"
   },
-  "author": "",
+  "author": "Chukwualuka Chiama",
   "license": "ISC",
   "dependencies": {
+    "dotenv": "^7.0.0",
     "graphql": "^14.1.1",
     "graphql-subscriptions": "^1.0.0",
     "graphql-yoga": "^1.17.4",
