@@ -1,0 +1,13 @@
+{
+  "main.css": "/mini-chat-app/build/static/css/main.8139f2c9.chunk.css",
+  "main.js": "/mini-chat-app/build/static/js/main.b414b8b2.chunk.js",
+  "main.js.map": "/mini-chat-app/build/static/js/main.b414b8b2.chunk.js.map",
+  "runtime~main.js": "/mini-chat-app/build/static/js/runtime~main.555d999b.js",
+  "runtime~main.js.map": "/mini-chat-app/build/static/js/runtime~main.555d999b.js.map",
+  "static/js/2.50749aa9.chunk.js": "/mini-chat-app/build/static/js/2.50749aa9.chunk.js",
+  "static/js/2.50749aa9.chunk.js.map": "/mini-chat-app/build/static/js/2.50749aa9.chunk.js.map",
+  "index.html": "/mini-chat-app/build/index.html",
+  "precache-manifest.2f704dde39fb979f3011e2732e38cc1a.js": "/mini-chat-app/build/precache-manifest.2f704dde39fb979f3011e2732e38cc1a.js",
+  "service-worker.js": "/mini-chat-app/build/service-worker.js",
+  "static/css/main.8139f2c9.chunk.css.map": "/mini-chat-app/build/static/css/main.8139f2c9.chunk.css.map"
+}
