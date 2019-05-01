@@ -1,0 +1,186 @@
+html {
+  margin: 0;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
+.user-welcome {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%
+}
+
+.user-heading {
+  display: flex;
+  justify-content: space-between;
+  margin: 15px 17px;
+}
+
+.select-user {
+  background-color: #2196f3;
+  color: white;
+  font-weight: bold;
+  margin: 5px 0;
+}
+
+p {
+  font-weight: bold;
+}
+
+.personal-chat {
+  width: 100%;
+}
+
+.chats-header {
+  height: 50px;
+  width: 100%;
+  position: fixed;
+  display: flex;
+  background-color: #2196f3;
+  top: 0;
+}
+
+.back-button {
+  width: 20%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.bar1, .bar2, .bar3 {
+  width: 25px;
+  height: 3px;
+  background-color: white;
+  margin: 3px;
+}
+
+.all-messages {
+  min-height: calc(100vh - 60px);
+}
+
+.sender {
+  border: 2px solid #dedede;
+  border-radius: 4px;
+  background: linear-gradient(90deg, white 49%, #f1f1f1 50%);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  margin: 5px;
+  padding: 10px;
+}
+
+.receiver {
+  border-color: #ccc;
+  border-radius: 4px;
+  background: linear-gradient(-90deg, white 49%, #ddd 50%);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin: 5px;
+  padding: 10px;
+}
+
+.users {
+  cursor: pointer;
+  margin: 10px 5px;
+  padding: 10px;
+  border-bottom: 1px solid rgba(248, 245, 245, 0.5);
+}
+
+.users:hover {
+  background-color: rgb(240, 240, 223);
+  color: black;
+}
+
+.select-message {
+  text-align: center;
+  font-weight: bold;
+}
+
+.chat-box {
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.MuiOutlinedInput-root-41 {
+  border: 1px solid gray
+}
+
+.sender-name {
+  font-weight: bold;
+  font-family:  "Book Antiqua";
+}
+
+.paper {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.text-area {
+  border: 10px;
+}
+
+.leave {
+  cursor: pointer;
+}
+
+.time {
+  font-size: 10px;
+  font-style: italic;
+  color: rgba(24, 75, 216, 0.9)
+}
+
+.user-typing  {
+  width: 50%;
+  padding: 10px;
+  color: white;
+}
+
+@media (min-width: 768px) {
+  .chatPage {
+    display: flex;
+    flex-flow: row nowrap
+  }
+  .user-welcome {
+    display: block !important;
+    position: fixed;
+    width: 30%;
+    border-right: 1px solid skyblue;
+  }
+  .personal-chat {
+    display: block !important;
+    width: 70%;
+    float: right;
+  }
+  .back-button {
+    display: none !important;
+  }
+}
+
+@media (min-width: 1024px) {
+  .user-welcome {
+    width: 25%
+  }
+  .personal-chat {
+    width: 75%
+  }
+}

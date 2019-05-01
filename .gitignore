@@ -9,10 +9,7 @@
 /coverage
 
 # production
-src/*
-public/*
-build/static/css/*.map
-build/static/js/*.map
+build/
 
 # misc
 .DS_Store
