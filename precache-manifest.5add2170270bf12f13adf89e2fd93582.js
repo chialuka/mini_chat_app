@@ -4,19 +4,19 @@ self.__precacheManifest = [
     "url": "/mini_chat_app/static/js/runtime~main.90ad47fb.js"
   },
   {
-    "revision": "df03bea04bec431faad6",
-    "url": "/mini_chat_app/static/js/main.b414b8b2.chunk.js"
+    "revision": "faaf8a6b89858bad6835",
+    "url": "/mini_chat_app/static/js/main.d13f2e18.chunk.js"
   },
   {
     "revision": "63cbd697f8be70f22335",
     "url": "/mini_chat_app/static/js/2.50749aa9.chunk.js"
   },
   {
-    "revision": "df03bea04bec431faad6",
-    "url": "/mini_chat_app/static/css/main.8139f2c9.chunk.css"
+    "revision": "faaf8a6b89858bad6835",
+    "url": "/mini_chat_app/static/css/main.ad379056.chunk.css"
   },
   {
-    "revision": "32af9ff242c19f691503e8646921fe88",
+    "revision": "5672fe43faa76b0f45ddb9e149d1a954",
     "url": "/mini_chat_app/index.html"
   }
 ];
