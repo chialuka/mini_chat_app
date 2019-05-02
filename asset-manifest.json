@@ -1,13 +1,15 @@
 {
-  "main.css": "/mini_chat_app/static/css/main.ad379056.chunk.css",
-  "main.js": "/mini_chat_app/static/js/main.d13f2e18.chunk.js",
-  "main.js.map": "/mini_chat_app/static/js/main.d13f2e18.chunk.js.map",
-  "runtime~main.js": "/mini_chat_app/static/js/runtime~main.90ad47fb.js",
-  "runtime~main.js.map": "/mini_chat_app/static/js/runtime~main.90ad47fb.js.map",
-  "static/js/2.50749aa9.chunk.js": "/mini_chat_app/static/js/2.50749aa9.chunk.js",
-  "static/js/2.50749aa9.chunk.js.map": "/mini_chat_app/static/js/2.50749aa9.chunk.js.map",
-  "index.html": "/mini_chat_app/index.html",
-  "precache-manifest.5add2170270bf12f13adf89e2fd93582.js": "/mini_chat_app/precache-manifest.5add2170270bf12f13adf89e2fd93582.js",
-  "service-worker.js": "/mini_chat_app/service-worker.js",
-  "static/css/main.ad379056.chunk.css.map": "/mini_chat_app/static/css/main.ad379056.chunk.css.map"
+  "files": {
+    "main.css": "/mini_chat_app/static/css/main.2273bedd.chunk.css",
+    "main.js": "/mini_chat_app/static/js/main.0459834e.chunk.js",
+    "main.js.map": "/mini_chat_app/static/js/main.0459834e.chunk.js.map",
+    "runtime~main.js": "/mini_chat_app/static/js/runtime~main.90ad47fb.js",
+    "runtime~main.js.map": "/mini_chat_app/static/js/runtime~main.90ad47fb.js.map",
+    "static/js/2.930c0c7e.chunk.js": "/mini_chat_app/static/js/2.930c0c7e.chunk.js",
+    "static/js/2.930c0c7e.chunk.js.map": "/mini_chat_app/static/js/2.930c0c7e.chunk.js.map",
+    "index.html": "/mini_chat_app/index.html",
+    "precache-manifest.4626f12c0dda64160e32933e1069111b.js": "/mini_chat_app/precache-manifest.4626f12c0dda64160e32933e1069111b.js",
+    "service-worker.js": "/mini_chat_app/service-worker.js",
+    "static/css/main.2273bedd.chunk.css.map": "/mini_chat_app/static/css/main.2273bedd.chunk.css.map"
+  }
 }
