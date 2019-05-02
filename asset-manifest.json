@@ -1,6 +1,6 @@
 {
   "files": {
-    "main.css": "/mini_chat_app/static/css/main.02fc04a9.chunk.css",
+    "main.css": "/mini_chat_app/static/css/main.2ac58bc7.chunk.css",
     "main.js": "/mini_chat_app/static/js/main.0459834e.chunk.js",
     "main.js.map": "/mini_chat_app/static/js/main.0459834e.chunk.js.map",
     "runtime~main.js": "/mini_chat_app/static/js/runtime~main.90ad47fb.js",
@@ -8,8 +8,8 @@
     "static/js/2.930c0c7e.chunk.js": "/mini_chat_app/static/js/2.930c0c7e.chunk.js",
     "static/js/2.930c0c7e.chunk.js.map": "/mini_chat_app/static/js/2.930c0c7e.chunk.js.map",
     "index.html": "/mini_chat_app/index.html",
-    "precache-manifest.e9ee61c785cd2de42568f748ad135987.js": "/mini_chat_app/precache-manifest.e9ee61c785cd2de42568f748ad135987.js",
+    "precache-manifest.9b6999a8886a14e185bc0dc0eafc45e2.js": "/mini_chat_app/precache-manifest.9b6999a8886a14e185bc0dc0eafc45e2.js",
     "service-worker.js": "/mini_chat_app/service-worker.js",
-    "static/css/main.02fc04a9.chunk.css.map": "/mini_chat_app/static/css/main.02fc04a9.chunk.css.map"
+    "static/css/main.2ac58bc7.chunk.css.map": "/mini_chat_app/static/css/main.2ac58bc7.chunk.css.map"
   }
 }
