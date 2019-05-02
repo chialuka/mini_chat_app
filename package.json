@@ -1,37 +1,24 @@
 {
-  "name": "client",
-  "version": "0.1.0",
-  "private": true,
-  "dependencies": {
-    "@material-ui/core": "^3.9.2",
-    "apollo-cache-inmemory": "^1.5.1",
-    "apollo-client": "^2.5.1",
-    "apollo-link-http": "^1.5.14",
-    "apollo-link-ws": "^1.0.17",
-    "graphql": "^14.1.1",
-    "graphql-tag": "^2.10.1",
-    "moment": "^2.24.0",
-    "react": "^16.8.2",
-    "react-apollo": "^2.4.1",
-    "react-dom": "^16.8.2",
-    "react-scripts": "^2.1.8",
-    "subscriptions-transport-ws": "^0.9.16",
-    "validator": "^10.11.0"
-  },
+  "name": "server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "now-build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js",
+    "dev": "nodemon index.js"
   },
-  "eslintConfig": {
-    "extends": "react-app"
+  "author": "Chukwualuka Chiama",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^7.0.0",
+    "graphql": "^14.1.1",
+    "graphql-subscriptions": "^1.0.0",
+    "graphql-yoga": "^1.17.4",
+    "mongoose": "^5.4.12",
+    "subscriptions-transport-ws": "^0.9.15"
   },
-  "browserslist": [
-    ">0.2%",
-    "not dead",
-    "not ie <= 11",
-    "not op_mini all"
-  ]
+  "devDependencies": {
+    "nodemon": "^1.18.10"
+  }
 }
