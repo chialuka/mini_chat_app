@@ -2,15 +2,15 @@ import React, { useCallback } from "react";
 import Button from "@material-ui/core/Button";
 
 const User = props => {
-  const { users, email, name } = props;
+  const { users, email, name, selectedMail, deleteUser } = props;
 
-  const selectUser = useCallback((mail, user) => {
-    props.selectedMail(mail, user);
-  });
+  const selectUserFun = useCallback((mail, user) => {
+    selectedMail(mail, user);
+  }, [selectedMail]);
 
-  const deleteUser = useCallback(() => {
-    props.deleteUser(email);
-  });
+  const deleteUserFun = useCallback(() => {
+    deleteUser(email);
+  }, [deleteUser, email]);
 
   return (
     <div className="user-welcome" style={props.style}>
@@ -20,7 +20,7 @@ const User = props => {
           className="leave"
           size="small"
           variant="outlined"
-          onClick={deleteUser}
+          onClick={deleteUserFun}
         >
           Leave Chat?
         </Button>
@@ -31,7 +31,7 @@ const User = props => {
             <div
               key={item.id}
               className="users"
-              onClick={() => selectUser(item.email, item.name)}
+              onClick={() => selectUserFun(item.email, item.name)}
             >
               {item.name}
             </div>

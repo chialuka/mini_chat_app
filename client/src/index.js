@@ -20,7 +20,9 @@ const httpLink = new HttpLink({
 const wsLink = new WebSocketLink({
   uri: `ws://localhost:4000/`,
   options: {
-    reconnect: true
+    reconnect: true,
+    lazy: true,
+    inactivityTimeout: 30000,
   }
 });
 
