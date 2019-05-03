@@ -193,7 +193,7 @@ mongoose.connection.once("open", () =>
   server.start({
     cors: {
       credentials: true,
-      origin: ["http://localhost:3000", "https://my-chat-app.lukaschiama.now.sh/"]
+      origin: "*"
     }
   },() => console.log("We make magic over at localhost:4000"))
 );

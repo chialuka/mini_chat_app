@@ -13,14 +13,16 @@ import "./index.css";
 
 // Create an http link:
 const httpLink = new HttpLink({
-  uri: 'https://server.lukaschiama.now.sh/'
+  uri: 'https://mini-chat-server.herokuapp.com/'
 });
 
 // Create a WebSocket link:
 const wsLink = new WebSocketLink({
-  uri: `wss://server.lukaschiama.now.sh/`,
+  uri: `wss://mini-chat-server.herokuapp.com/`,
   options: {
-    reconnect: true
+    reconnect: true,
+    lazy: true,
+    inactivityTimeout: 100000,
   }
 });
 
