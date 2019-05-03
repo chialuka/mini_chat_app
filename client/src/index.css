@@ -6,18 +6,19 @@ html {
 
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+  font-family: "Segoe UI", "Roboto", "Oxygen",
     "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
     sans-serif;
     max-width: 100%;
     overflow-x: hidden;
+    font-size: 0.8em;
 }
 
 .user-welcome {
   display: flex;
   flex-direction: column;
   width: 100%;
-  height: 100%
+  height: 100%;
 }
 
 .user-heading {
@@ -39,6 +40,7 @@ p {
 
 .personal-chat {
   width: 100%;
+  background-color: ghostwhite;
 }
 
 .chats-header {
@@ -66,28 +68,34 @@ p {
 
 .all-messages {
   min-height: calc(100vh - 60px);
+  margin-top: 55px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+.sender, .receiver {
+  font-family: "Montserrat", sans-serif;
+  border: 2px solid #dedede;
+  border-radius: 4px;
+  background-color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  margin: 5px;
+  padding: 10px;
+  min-width: 40%;
+  max-width: 60%;
+  box-shadow: 0px 2px 4px 0px rgba(100, 100, 100, 0.3);
 }
 
 .sender {
-  border: 2px solid #dedede;
-  border-radius: 4px;
-  background: linear-gradient(90deg, white 49%, #f1f1f1 50%);
-  display: flex;
-  flex-direction: column;
   align-items: flex-end;
-  margin: 5px;
-  padding: 10px;
+  margin-left: auto;
 }
 
 .receiver {
-  border-color: #ccc;
-  border-radius: 4px;
-  background: linear-gradient(-90deg, white 49%, #ddd 50%);
-  display: flex;
-  flex-direction: column;
   align-items: flex-start;
-  margin: 5px;
-  padding: 10px;
+  margin-right: auto;
 }
 
 .users {
@@ -115,12 +123,17 @@ p {
 }
 
 .MuiOutlinedInput-root-41 {
-  border: 1px solid gray
+  border: 1px solid gray;
+}
+
+.MuiFormControl-fullWidth-40 {
+  background-color: white;
 }
 
 .sender-name {
   font-weight: bold;
-  font-family:  "Book Antiqua";
+  font-family: "Open Sans";
+  padding-bottom: 5px;
 }
 
 .paper {
@@ -144,9 +157,10 @@ p {
 }
 
 .time {
-  font-size: 10px;
   font-style: italic;
-  color: rgba(24, 75, 216, 0.9)
+  font-size: 0.8em;
+  color: rgba(24, 75, 216, 0.9);
+  padding-top: 3px;
 }
 
 .user-typing  {
@@ -156,6 +170,9 @@ p {
 }
 
 @media (min-width: 768px) {
+  body {
+    font-size: 1em;
+  }
   .chatPage {
     display: flex;
     flex-flow: row nowrap
@@ -165,6 +182,7 @@ p {
     position: fixed;
     width: 30%;
     border-right: 1px solid skyblue;
+    overflow-y: auto;
   }
   .personal-chat {
     display: block !important;
