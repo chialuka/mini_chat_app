@@ -75,13 +75,13 @@ const resolvers = {
 
   User: {
     messages: async ({ email }) => {
-      return await Message.find({ senderMail: email });
+      return Message.find({ senderMail: email });
     }
   },
 
   Message: {
     users: async ({ senderMail }) => {
-      return await User.find({ email: senderMail });
+      return User.find({ email: senderMail });
     }
   },
 
