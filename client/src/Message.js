@@ -1,91 +1,27 @@
-import React, { useState, useEffect, useRef } from "react";
-import gql from "graphql-tag";
-import { graphql, compose } from "react-apollo";
-import TextField from "@material-ui/core/TextField";
-import moment from "moment";
-
-const MessageQuery = gql`
-  query {
-    messages {
-      id
-      message
-      senderMail
-      receiverMail
-      timestamp
-      users {
-        name
-        email
-      }
-    }
-  }
-`;
-
-const CreateMessageMutation = gql`
-  mutation(
-    $message: String!
-    $senderMail: String!
-    $receiverMail: String!
-    $timestamp: Float!
-  ) {
-    createMessage(
-      message: $message
-      senderMail: $senderMail
-      receiverMail: $receiverMail
-      timestamp: $timestamp
-    ) {
-      message
-      senderMail
-      receiverMail
-      id
-      timestamp
-      users {
-        name
-        email
-      }
-    }
-  }
-`;
-
-const UserTypingMutation = gql`
-  mutation($email: String!, $receiverMail: String!) {
-    userTyping(email: $email, receiverMail: $receiverMail)
-  }
-`;
-
-const MessageSubscription = gql`
-  subscription($receiverMail: String!) {
-    newMessage(receiverMail: $receiverMail) {
-      message
-      senderMail
-      receiverMail
-      id
-      timestamp
-      users {
-        name
-        email
-      }
-    }
-  }
-`;
-
-const UserTypingSubscription = gql`
-  subscription($receiverMail: String!) {
-    userTyping(receiverMail: $receiverMail)
-  }
-`;
+import React, { useState, useEffect, useRef } from 'react';
+import { graphql, compose } from 'react-apollo';
+import TextField from '@material-ui/core/TextField';
+import moment from 'moment';
+import {
+  MessageQuery,
+  CreateMessageMutation,
+  UserTypingMutation,
+  MessageSubscription,
+  UserTypingSubscription
+} from './Message-Query';
 
 const Message = props => {
   const chatBox = useRef(null);
 
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useState('');
 
-  const [userTyping, setUser] = useState("");
+  const [userTyping, setUser] = useState('');
 
   const [timer, setTimer] = useState(null);
 
   const handleShow = () => {
-    props.setStyle()
-  }
+    props.setStyle();
+  };
 
   useEffect(() => {
     props.message.subscribeToMore({
@@ -134,7 +70,7 @@ const Message = props => {
     const changeMail = async () => {
       await props.userTyping({
         variables: {
-          email: "email",
+          email: 'email',
           receiverMail
         }
       });
@@ -144,7 +80,7 @@ const Message = props => {
   };
 
   const handleSubmit = async (e, message, email) => {
-    setMessage("");
+    setMessage('');
     e.preventDefault();
     const { receiverMail } = props;
     if (!message.length) return null;
@@ -163,7 +99,7 @@ const Message = props => {
     });
     await props.userTyping({
       variables: {
-        email: "email",
+        email: 'email',
         receiverMail
       }
     });
@@ -200,15 +136,15 @@ const Message = props => {
             <div
               key={item.id}
               className={item.users.map(a =>
-                a.email === receiverMail ? "receiver" : "sender"
+                a.email === receiverMail ? 'receiver' : 'sender'
               )}
             >
               <div className="sender-name">{item.users.map(x => x.name)}</div>
-              {item.message}{" "}
+              {item.message}{' '}
               <span className="time"> {moment(item.timestamp).fromNow()}</span>
             </div>
           ) : (
-            ""
+            ''
           )
         )}
         {userLeft && userLeft === receiverMail ? (
@@ -223,7 +159,7 @@ const Message = props => {
         >
           <TextField
             style={{ margin: 10 }}
-            placeholder={"Say something to " + receiverName}
+            placeholder={'Say something to ' + receiverName}
             fullWidth
             name="message"
             value={message}
@@ -233,14 +169,16 @@ const Message = props => {
           />
         </form>
       ) : (
-        <div className="select-message">Select a logged in user from the left panel</div>
+        <div className="select-message">
+          Select a logged in user from the left panel
+        </div>
       )}
     </div>
   );
 };
 
 export default compose(
-  graphql(MessageQuery, { name: "message" }),
-  graphql(CreateMessageMutation, { name: "createMessage" }),
-  graphql(UserTypingMutation, { name: "userTyping" })
+  graphql(MessageQuery, { name: 'message' }),
+  graphql(CreateMessageMutation, { name: 'createMessage' }),
+  graphql(UserTypingMutation, { name: 'userTyping' })
 )(Message);

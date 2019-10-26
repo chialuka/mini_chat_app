@@ -4,11 +4,11 @@ import Button from "@material-ui/core/Button";
 const User = props => {
   const { users, email, name, selectedMail, deleteUser } = props;
 
-  const selectUserFun = useCallback((mail, user) => {
+  const selectUserFunction = useCallback((mail, user) => {
     selectedMail(mail, user);
   }, [selectedMail]);
 
-  const deleteUserFun = useCallback(() => {
+  const deleteUserFunction = useCallback(() => {
     deleteUser(email);
   }, [deleteUser, email]);
 
@@ -20,7 +20,7 @@ const User = props => {
           className="leave"
           size="small"
           variant="outlined"
-          onClick={deleteUserFun}
+          onClick={deleteUserFunction}
         >
           Leave Chat?
         </Button>
@@ -31,7 +31,7 @@ const User = props => {
             <div
               key={item.id}
               className="users"
-              onClick={() => selectUserFun(item.email, item.name)}
+              onClick={() => selectUserFunction(item.email, item.name)}
             >
               {item.name}
             </div>

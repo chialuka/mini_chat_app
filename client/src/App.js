@@ -1,80 +1,28 @@
-import React, { useState, useEffect } from "react";
-import User from "./User";
-import Message from "./Message";
-import Registration from "./Frontpage";
-import gql from "graphql-tag";
-import { graphql, compose } from "react-apollo";
-
-const UserQuery = gql`
-  query {
-    users {
-      id
-      name
-      email
-      messages {
-        message
-        senderMail
-        receiverMail
-      }
-    }
-  }
-`;
-
-const CreateUserMutation = gql`
-  mutation($name: String!, $email: String!) {
-    createUser(name: $name, email: $email) {
-      name
-      email
-      id
-      messages {
-        message
-        senderMail
-        receiverMail
-      }
-    }
-  }
-`;
-
-const DeleteUserMutation = gql`
-  mutation($email: String!) {
-    deleteUser(email: $email)
-  }
-`;
-
-const AddUserSubscription = gql`
-  subscription {
-    newUser {
-      name
-      email
-      id
-      messages {
-        message
-        senderMail
-        receiverMail
-        timestamp
-      }
-    }
-  }
-`;
-
-const DeleteUserSubscription = gql`
-  subscription {
-    oldUser
-  }
-`;
+import React, { useState, useEffect } from 'react';
+import User from './User';
+import Message from './Message';
+import Registration from './Frontpage';
+import { graphql, compose } from 'react-apollo';
+import {
+  UserQuery,
+  CreateUserMutation,
+  DeleteUserMutation,
+  AddUserSubscription,
+  DeleteUserSubscription
+} from './User-Query';
 
 const App = props => {
   const user =
-    (localStorage.getItem("token") &&
-      JSON.parse(localStorage.getItem("token"))) ||
+    (localStorage.getItem('token') &&
+      JSON.parse(localStorage.getItem('token'))) ||
     {};
 
   const [receiverState, setReceiverState] = useState({
-    receiverMail: "",
-    receiverName: ""
+    receiverMail: '',
+    receiverName: ''
   });
 
-  const [userLeft, setUserLeft] = useState("");
+  const [userLeft, setUserLeft] = useState('');
 
   const [hidden, setHidden] = useState(false);
 
@@ -87,7 +35,7 @@ const App = props => {
 
   const setStyle = () => {
     setHidden(!hidden);
-  }
+  };
 
   useEffect(() => {
     const subscribeToMore = props.data.subscribeToMore;
@@ -135,7 +83,7 @@ const App = props => {
   };
 
   const deleteUser = async email => {
-    localStorage.removeItem("token");
+    localStorage.removeItem('token');
     await props.deleteUser({
       variables: { email },
       update: store => {
@@ -152,11 +100,11 @@ const App = props => {
   } = props;
 
   if (loading || error) return null;
-  if (localStorage.getItem("token")) {
+  if (localStorage.getItem('token')) {
     return (
       <div className="chat-page">
         <User
-          style={{ display: hidden ? "none" : "block" }}
+          style={{ display: hidden ? 'none' : 'block' }}
           users={users}
           email={user.email}
           name={user.name}
@@ -164,7 +112,7 @@ const App = props => {
           deleteUser={deleteUser}
         />
         <Message
-          style={{ display: hidden ? "block" : "none" }}
+          style={{ display: hidden ? 'block' : 'none' }}
           email={user.email}
           receiverMail={receiverMail}
           receiverName={receiverName}
@@ -180,6 +128,6 @@ const App = props => {
 
 export default compose(
   graphql(UserQuery),
-  graphql(CreateUserMutation, { name: "createUser" }),
-  graphql(DeleteUserMutation, { name: "deleteUser" })
+  graphql(CreateUserMutation, { name: 'createUser' }),
+  graphql(DeleteUserMutation, { name: 'deleteUser' })
 )(App);
