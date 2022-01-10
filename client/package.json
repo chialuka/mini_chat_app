@@ -16,7 +16,7 @@
     "react-dom": "^16.8.2",
     "react-scripts": "^3.0.1",
     "subscriptions-transport-ws": "^0.9.16",
-    "validator": "^10.11.0"
+    "validator": "^13.7.0"
   },
   "scripts": {
     "start": "react-scripts start",
