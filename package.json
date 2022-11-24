@@ -11,6 +11,6 @@
   "author": "Chukwualuka Chiama",
   "license": "MIT",
   "devDependencies": {
-    "concurrently": "^4.1.0"
+    "concurrently": "^7.6.0"
   }
 }
